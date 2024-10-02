@@ -1,9 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+
+// Importacion de componentes
+import { HomeComponent } from './home/home.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,  RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet,  
+    RouterLink, 
+    RouterLinkActive,
+    HomeComponent,
+    NavbarComponent,
+    SidebarComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

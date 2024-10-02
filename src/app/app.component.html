@@ -1,22 +1,15 @@
+<div class="flex h-screen bg-gray-100 dark:bg-gray-900">
+  <!-- Sidebar siempre visible -->
+  <app-sidebar></app-sidebar>
 
-<!-- Navegación entre componentes viendo pagina principal -->
- <ul>
-  <li>
-    <a routerLink="/comparativo-ventas-3-anos" routerLinkActive="active" ariaCurrentWhenActive="page" >
-    Comparativo de Ventas de 3 Años
-    </a>
+  <div class="flex-1 flex flex-col">
+    <!-- Navbar siempre visible -->
+    <app-navbar></app-navbar>
 
-  <li>
-    <a routerLink="/comparativo-ventas-mensual-categoria" routerLinkActive="active" ariaCurrentActive="page">
-      Comparativo de Ventas Mensual por Categoría
-    </a>
-  </li>
+    <!-- Contenido dinámico en función de la ruta -->
+    <main class="flex-1 p-6 dark:bg-gray-900 text-gray-900 dark:text-white">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
 
-  <li>
-    <a routerLink="/informe-ventas-mes-categoria-proveedor" routerLinkActive="active" ariaCurrentActive="page">
-      Informe de Ventas del Mes por Categoría
-    </a>
-  </li>
- </ul>
-
- <router-outlet></router-outlet>

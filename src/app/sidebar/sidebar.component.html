@@ -1,0 +1,36 @@
+<aside class="flex flex-col bg-gray-800 h-screen hover:w-64 w-16 transition-all duration-300">
+    <ul class="flex-1">
+      <!-- Home -->
+      <li class="group flex items-center p-4 hover:bg-gray-700 cursor-pointer">
+        <a [routerLink]="['/home']" class="flex items-center">
+          <span class="material-icons text-white">Informe General</span>
+        
+        </a>
+      </li>
+  
+      <!-- Comparativo Ventas 3 Años -->
+      <li class="group flex items-center p-4 hover:bg-gray-700 cursor-pointer">
+        <a [routerLink]="['/comparativo-ventas-3-anos']" class="flex items-center">
+          <span class="material-icons text-white">Comparativo de Ventas 3 años</span>
+          
+        </a>
+      </li>
+  
+      <!-- Ventas Mensuales -->
+      <li class="group flex items-center p-4 hover:bg-gray-700 cursor-pointer">
+        <a [routerLink]="['/comparativo-ventas-mensual-categoria']" class="flex items-center">
+          <span class="material-icons text-white">Comparativo de Ventas</span>
+          <span class="ml-4 text-white group-hover:inline hidden">Ventas Mensuales</span>
+        </a>
+      </li>
+
+      <!-- Informe -->
+      <li class="group flex items-center p-4 hover:bg-gray-700 cursor-pointer">
+            <a routerLink="/informe-ventas-mes-categoria-proveedor" class="flex items-center">
+                <span class="material-icons text-white">Informe</span>
+                <span class="ml-4 text-white group-hover:inline hidden">Informe de Ventas</span>
+            </a>
+      </li>
+    </ul>
+  </aside>
+  

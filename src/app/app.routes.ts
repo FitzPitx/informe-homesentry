@@ -13,4 +13,18 @@ export const routes: Routes = [
         path: 'informe-ventas-mes-categoria-proveedor', 
         loadComponent: () => import('./informe-ventas-mes-categoria-proveedor/informe-ventas-mes-categoria-proveedor.component').then(m => m.InformeVentasMesCategoriaProveedorComponent)
       },
+      {
+        path: 'home',
+        loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
+      },
+      {
+        path: 'sidebar',
+        loadComponent: () => import('./sidebar/sidebar.component').then(m => m.SidebarComponent)
+      },
+      {
+        path: 'navbar',
+        loadComponent: () => import('./navbar/navbar.component').then(m => m.NavbarComponent)
+      }
+
+
 ];

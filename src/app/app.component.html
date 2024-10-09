@@ -1,8 +1,8 @@
 <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
-  <!-- Sidebar siempre visible -->
-  <app-sidebar></app-sidebar>
+  <!-- Sidebar siempre visible y fija -->
+  <app-sidebar class="fixed h-full"></app-sidebar>
 
-  <div class="flex-1 flex flex-col">
+  <div class="flex-1 flex flex-col ml-16"> <!-- Ajusta el margen izquierdo para compensar el ancho de la sidebar -->
     <!-- Navbar siempre visible -->
     <app-navbar></app-navbar>
 

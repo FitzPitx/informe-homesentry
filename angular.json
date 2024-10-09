@@ -32,11 +32,9 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/flowbite/dist/flowbite.min.css"
+              "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/flowbite/dist/flowbite.min.js",
               "node_modules/simple-datatables/dist/umd/simple-datatables.js",
               "node_modules/apexcharts/dist/apexcharts.min.js"
             ],
@@ -101,11 +99,9 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/flowbite/dist/flowbite.min.css"
+              "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/flowbite/dist/flowbite.min.js",
               "node_modules/simple-datatables/dist/umd/simple-datatables.js",
               "node_modules/apexcharts/dist/apexcharts.min.js"
             ]

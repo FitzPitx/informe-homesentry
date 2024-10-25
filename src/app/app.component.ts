@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 // Importacion de componentes
 import { HomeComponent } from './home/home.component';
@@ -13,7 +14,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     RouterLinkActive,
     HomeComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    FormsModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

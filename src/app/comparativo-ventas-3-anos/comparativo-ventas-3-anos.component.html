@@ -1,7 +1,139 @@
-<div class="form-group flex flex-wrap items-center gap-4">
-        <p class="text-gray-700 mb-2">Fecha Inicial:</p>
-        <input type="date" id="fechaInicio" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-transparent">
-    
-        <p class="text-gray-700 mb-2">Fecha Final:</p>
-        <input type="date" id="fechaFinal" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-transparent">
+<div class="bg-white rounded-lg p-2 shadow-md w-full max-w-7xl m-1">
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <!-- Rango de Fechas -->
+                <mat-form-field class="flex flex-col text-sm">
+                        <mat-label class="block mb-1 font-normal text-gray-600 text-sm">Rango de fechas:</mat-label>
+                        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                                <input matStartDate formControlName="start" placeholder="Fecha Inicial"
+                                        class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <input matEndDate formControlName="end" placeholder="Fecha Final"
+                                        class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </mat-date-range-input>
+                        <mat-hint class="text-xs">MM/DD/YYYY - MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+
+                <!-- Sucursal -->
+                <div class="flex flex-col text-sm">
+                        <label for="sucursal" class="block mb-1 font-normal text-gray-600 text-sm">Sucursal:</label>
+                        <select id="sucursal"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option *ngFor="let sucursal of sucursales" [value]="sucursal.id">
+                                        {{sucursal.id}} - {{sucursal.dessucSuc}}
+                                </option>
+                        </select>
+                </div>
+
+                <!-- Categoría -->
+                <div class="flex flex-col text-sm">
+                        <label for="categoria" class="block mb-1 font-normal text-gray-600 text-sm">Categoría:</label>
+                        <select id="categoria"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                (change)="onCategoryChange($event)">
+                                <option value="999">Todas</option>
+                                <option *ngFor="let categoria of categorias" [value]="categoria.codCeg">
+                                        {{categoria.nomcatCeg}}
+                                </option>
+                        </select>
+                </div>
+
+                <!-- Subcategoría -->
+                <div class="flex flex-col text-sm">
+                        <label for="subcategoria"
+                                class="block mb-1 font-normal text-gray-600 text-sm">Subcategoría:</label>
+                        <select id="subcategoria"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                (change)="onSubcategoryChange($event)">
+                                <option *ngFor="let subcategoria of subcategorias" [value]="subcategoria.id.idSubcategoria">
+                                        {{subcategoria.descripcion}}
+                                </option>
+                        </select>
+                </div>
+
+                <!-- Línea -->
+                <div class="flex flex-col text-sm">
+                        <label for="linea" class="block mb-1 font-normal text-gray-600 text-sm">Línea:</label>
+                        <select id="linea"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option *ngFor="let linea of lineas" [value]="linea.id">
+                                        {{linea.nomlineaLea}}
+                                </option>
+                        </select>
+                </div>
+
+                <!-- Comprador -->
+                <div class="flex flex-col text-sm">
+                        <label for="comprador" class="block mb-1 font-normal text-gray-600 text-sm">Comprador:</label>
+                        <select id="comprador"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="EL">Edwin Landinez</option>
+                                <option value="JG">Juan Gutierrez</option>
+                                <option value="CS">Carmen Solano</option>
+                                <option value="LRR">Liseth Rico Ramirez</option>
+                                <option value="PMMB">Paula Milena Mendez Burbano</option>
+                                <option value="AM">Adriana Moreno</option>
+                                <option value="FJ">Franklin Jurado</option>
+                                <option value="DBA">Diana Botero Afanador</option>
+                                <option value="MB">Marly Barrero</option>
+                        </select>
+                </div>
+
+                <!-- Comparativo -->
+                <div class="flex flex-col text-sm">
+                        <label for="comparativo"
+                                class="block mb-1 font-normal text-gray-600 text-sm">Comparativo:</label>
+                        <select id="comparativo"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="unAnio">Un Año</option>
+                                <option value="dosAnio">Dos Años</option>
+                                <option value="tresAnio">Tres Años</option>
+                        </select>
+                </div>
+
+                <!-- Productos -->
+                <div class="flex flex-col text-sm">
+                        <label for="tipoProducto"
+                                class="block mb-1 font-normal text-gray-600 text-sm">Productos:</label>
+                        <select id="tipoProducto"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="todos">Todos</option>
+                                <option value="nacional">Nacional</option>
+                                <option value="importado">Importado</option>
+                        </select>
+                </div>
+
+                <!-- Marca Propia -->
+                <div class="flex flex-col text-sm">
+                        <label for="marcaPropia" class="block mb-1 font-normal text-gray-600 text-sm">Marca
+                                Propia:</label>
+                        <select id="marcaPropia"
+                                class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                <option value="todos">Todos</option>
+                                <option value="si">Sí</option>
+                                <option value="no">No</option>
+                        </select>
+                </div>
+
+                <!-- Proveedor -->
+                <div class="flex flex-col text-sm">
+                        <label for="proveedor" class="block mb-1 font-normal text-gray-600 text-sm">Proveedor:</label>
+                        <div class="flex items-center gap-1">
+                                <input id="proveedor" type="text"
+                                        class="p-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 flex-1">
+                                <button type="button"
+                                        class="p-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm">
+                                        🔍
+                                </button>
+                        </div>
+                </div>
+
+                <!-- Boton Consultar -->
+                <div class="flex items-center justify-start md:justify-center mt-2 md:mt-0 md:col-span-4">
+                        <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-4 rounded focus:outline-none focus:shadow-outline text-sm">
+                                Consultar
+                        </button>
+                </div>
+        </form>
 </div>

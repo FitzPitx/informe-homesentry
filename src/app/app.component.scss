@@ -1,0 +1,19 @@
+.navbar-text {
+    font-size: 1.5rem; /* Ajusta el tamaño según tus necesidades */
+    font-weight: bold;
+  }
+
+  .logo-img {
+    height: 30px; /* Ajusta la altura según tus necesidades */
+    width: auto;
+  }
+
+  .flex-grow-1 {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .sidebar.active ~ .flex-grow-1 {
+    margin-left: 250px; /* Ajusta el contenido principal cuando la barra lateral está activa */
+  }
+  

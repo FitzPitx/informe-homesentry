@@ -1,15 +1,10 @@
-<div class="flex h-screen bg-white">
-  <!-- Sidebar siempre visible y fija -->
-  <app-sidebar class="fixed h-full"></app-sidebar>
+<!-- Contenedor principal -->
+<div class="d-flex min-vh-100">
+  <!-- Barra lateral -->
+  <app-sidebar class="sidebar bg-light border-end"></app-sidebar>
 
-  <div class="flex-1 flex flex-col ml-16">
-    <!-- Navbar siempre visible -->
-    <app-navbar></app-navbar>
-
-    <!-- Contenido dinámico en función de la ruta -->
-    <main class="flex-1 p-6 bg-white text-gray-800">
-      <router-outlet></router-outlet>
-    </main>
+  <!-- Contenido principal -->
+  <div class="flex-grow-1 p-3">
+    <router-outlet></router-outlet>
   </div>
 </div>
-

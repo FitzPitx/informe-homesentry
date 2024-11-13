@@ -1,25 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { JsonPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatNativeDateModule } from '@angular/material/core';
 import { CategoriasServiceService } from '../services/categoria-service/categorias-service.service';
 import { SubcategoriasServiceService } from '../services/subcategoria-service/subcategorias-service.service'; 
 import { SucursalServiceService } from '../services/sucursal-service/sucursal-service.service'; 
 import { LineasServiceService } from '../services/linea-service/lineas-service.service';
-import { start } from 'repl';
 
 @Component({
   selector: 'app-comparativo-ventas-3-anos',
   standalone: true,
-  imports: [MatFormFieldModule, 
-    MatDatepickerModule, 
+  imports: [
     FormsModule, 
     ReactiveFormsModule,
-    JsonPipe,
-    MatNativeDateModule,
     CommonModule],
   templateUrl: './comparativo-ventas-3-anos.component.html',
   styleUrls: ['./comparativo-ventas-3-anos.component.scss'],

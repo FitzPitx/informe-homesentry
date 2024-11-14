@@ -1,3 +1,7 @@
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
 .navbar-text {
     font-size: 1.5rem; /* Ajusta el tamaño según tus necesidades */
     font-weight: bold;
@@ -17,3 +21,6 @@
     margin-left: 250px; /* Ajusta el contenido principal cuando la barra lateral está activa */
   }
   
+  .nav-item .nav-link {
+    font-size: 0.85rem; /* Ajusta el valor según tus necesidades */
+  }

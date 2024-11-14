@@ -17,14 +17,4 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
       },
-      {
-        path: 'sidebar',
-        loadComponent: () => import('./sidebar/sidebar.component').then(m => m.SidebarComponent)
-      },
-      {
-        path: 'navbar',
-        loadComponent: () => import('./navbar/navbar.component').then(m => m.NavbarComponent)
-      }
-
-
 ];

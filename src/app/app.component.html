@@ -1,10 +1,93 @@
-<!-- Contenedor principal -->
-<div class="d-flex min-vh-100">
-  <!-- Barra lateral -->
-  <app-sidebar class="sidebar bg-light border-end"></app-sidebar>
+<!-- Header -->
+<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a href="#" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white">
+    HomeSentry
+  </a>
+  <ul class="navbar-nav flex-row d-md-none">
+    <li class="nav-item text-nowrap">
+      <button class="nav-link px-3 text-white" type="button" data-bs-toogle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+    </li>
+  </ul>
+</header>
 
-  <!-- Contenido principal -->
-  <div class="flex-grow-1 p-3">
-    <router-outlet></router-outlet>
+<!-- Sidebar -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="sidebar border border-right col-md-6 col-lg-2 p-0 bg-body-tertiary">
+      <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebarMenuLabel">HomeSentry</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-2 overflow-y-auto">
+          <a href="/" class="d-flex align-items-center mb-0 mb-md-2 link-dark text-decoration-none">
+            <img src="https://cdn1.totalcommerce.cloud/totalcode-co/web_content/assets/hs-exito.png" width="128" height="64" alt="Homesentry Logo">
+            <span class="fs-6">Reportes HomeSentry</span>
+          </a>
+          <hr class="my-3">
+          <!-- Elementos de la sidebar -->
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a [routerLink]="['/home']" class="nav-link d-flex align-items-center gap-2 active" aria-current="page">
+                <i class="bi bi-house-door-fill fs-6"></i>
+                Informe General
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a [routerLink]="['/comparativo-ventas-3-anos']" class="nav-link d-flex align-items-center gap-2 active">
+                <i class="bi bi-bar-chart-line-fill fs-6"></i>
+                Comparativo de Ventas 3 años
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a [routerLink]="['/comparativo-ventas-mensual-categoria']" class="nav-link d-flex align-items-center gap-2 active">
+                <i class="bi bi-graph-up-arrow fs-6"></i>
+                Ventas Mensuales por Categoría
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a [routerLink]="['/informe-ventas-mes-categoria-proveedor']" class="nav-link d-flex align-items-center gap-2 active">
+                <i class="bi bi-file-earmark-text-fill fs-6"></i>
+                Informe Ventas por mes Categoría/Proveedor
+              </a>
+            </li>
+          </ul>
+
+          <hr class="my-3">
+
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-gear"></i>
+                Settings
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-box-arrow-left"></i>
+                Sign out
+              </a>
+            </li>
+          </ul>
+          
+          <!-- Contenido de Perfiles mas Adelante -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Contenido principal -->
+     <main class="col-md-4 ms-sm-auto col-lg-10 px-md-4">
+      <router-outlet></router-outlet>
+     </main>
   </div>
 </div>
+
+

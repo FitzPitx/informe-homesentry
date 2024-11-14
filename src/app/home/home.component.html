@@ -1,109 +1,14 @@
-<div class="grid w-full grid-cols-1 gap-4 mt-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
-  <!-- Total Inventarios -->
-  <div
-    class="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 2xl:col-span-1 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:flex">
-    <div class="w-full">
-      <h3 class="text-lg font-normal text-gray-700">Total Inventarios</h3>
-      <p class="flex items-center text-base font-normal text-gray-500 mt-2">
-        <span class="flex items-center mr-1.5 text-sm text-green-500">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path clip-rule="evenodd" fill-rule="evenodd"
-              d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z">
-            </path>
-          </svg>
-          12.5%
-        </span>
-        Desde el mes pasado
-      </p>
-    </div>
-    <div class="w-full" id="inventory-chart"></div>
-  </div>
-
-  <!-- Total Ventas -->
-  <div
-    class="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 2xl:col-span-1 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:flex">
-    <div class="w-full">
-      <h3 class="text-lg font-normal text-gray-700">Total Ventas</h3>
-      <p class="flex items-center text-base font-normal text-gray-500 mt-2">
-        <span class="flex items-center mr-1.5 text-sm text-green-500">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path clip-rule="evenodd" fill-rule="evenodd"
-              d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z">
-            </path>
-          </svg>
-          3.4%
-        </span>
-        Desde el mes pasado
-      </p>
-    </div>
-    <div class="w-full" id="sales-chart"></div>
-  </div>
-
-  <!-- Total Proveedores -->
-  <div
-    class="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 2xl:col-span-1 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:flex">
-    <div class="w-full">
-      <h3 class="text-lg font-normal text-gray-700">Total Proveedores</h3>
-      <p class="flex items-center text-base font-normal text-gray-500 mt-2">
-        <span class="flex items-center mr-1.5 text-sm text-green-500">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true">
-            <path clip-rule="evenodd" fill-rule="evenodd"
-              d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z">
-            </path>
-          </svg>
-          5.2%
-        </span>
-        Desde el mes pasado
-      </p>
-    </div>
-    <div class="w-full" id="suppliers-chart"></div>
-  </div>
-
-  <!-- Otros gráficos -->
-  <!-- Ventas por Día de la Semana -->
-  <div
-    class="col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-1 2xl:col-span-1 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-sm sm:flex">
-    <div class="w-full">
-      <h3 class="text-lg font-normal text-gray-700">Ventas por Día de la Semana</h3>
-      <div class="w-full" id="sales-by-day-chart"></div>
-    </div>
-  </div>
-
-  <!-- Otros gráficos continúan con el mismo estilo -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Total de Ventas</h1>
+  <hr class="my-1">
 </div>
 
-<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mt-8">
-  <div class="items-center justify-between lg:flex">
-    <div class="mb-4 lg:mb-0">
-      <h3 class="mb-2 text-xl font-bold text-gray-900">Lista de inventarios</h3>
-      <span class="text-base font-normal text-gray-500">Lista de todos los productos en el inventario</span>
-    </div>
-  </div>
-
-  <!-- Tabla -->
-  <div class="flex flex-col mt-6">
-    <div class="overflow-x-auto rounded-lg">
-      <div class="inline-block min-w-full align-middle">
-        <div class="overflow-hidden shadow sm:rounded-lg">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Nombre del Producto</th>
-                <th class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Cantidad</th>
-                <th class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Precio Unitario</th>
-                <th class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Nombre del Proveedor</th>
-                <th class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Estado</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white">
-              <!-- Filas de inventarios -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="text-lg-center">
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [title]="chartOptions.title"
+  ></apx-chart>
 </div>
+

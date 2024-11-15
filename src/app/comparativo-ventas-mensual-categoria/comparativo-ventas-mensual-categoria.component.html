@@ -1,1 +1,52 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <p class="fs-4">Comparativo Mensual</p>
+    <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="btn-toolbar mb-2 mb-md-0">
+
+        <!-- Selector de Sucursal -->
+        <div class="input-group me-2">
+            <span class="input-group-text">
+                <i class="bi bi-building"></i>
+            </span>
+            <select class="form-select form-select-sm" formControlName="sucursal">
+                <option value="" disabled selected>Sucursal</option>
+                <option value="001">001 - Home Sentry Norte</option>
+                <option value="021">021 - Home Sentry Plaza Americas</option>
+                <option value="032">032 - Home Sentry Titan</option>
+                <option value="053">053 - Home Sentry 116</option>
+                <option value="068">068 - Home Sentry Salitre</option>
+                <option value="084">084 - Sentry Cacique</option>
+                <option value="100">100 - Home Sentry Villavicencio</option>
+                <option value="140">140 - Sentry Cali 6ta Avenida</option>
+                <option value="160">160 - Sentry Mayorca</option>
+                <option value="180">180 - Sentry Fontanar Chia</option>
+                <option value="200">200 - Sentry Viva Barranquilla</option>
+                <option value="220">220 - Sentry Online</option>
+                <option value="240">240 - Sentry Mercado Libre</option>
+                <option value="280">280 - Hs Cartagena Bocagrande Plaza</option>
+                <option value="300">300 - Sentry Medellin Santafe</option>
+                <option value="320">320 - Sentry Plaza Central Bogota</option>
+            </select>
+        </div>
+
+        <!-- Selector de Año -->
+        <div class="input-group me-2">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <select class="form-select form-select-sm" formControlName="year">
+                <option value="" disabled selected>Año</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+            </select>
+        </div>
+
+        <!-- Botón de Aplicar Filtros -->
+        <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+            <i class="bi bi-funnel"></i>
+            Aplicar Filtros
+        </button>
+    </form>
+</div>
+
 <app-categoria-ventas></app-categoria-ventas>

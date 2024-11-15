@@ -33,8 +33,8 @@ export class HomeComponent {
     this.chartOptions = {
       series: [
         {
-          name: "My-series",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+          name: "Ventas Retail",
+          data: [784913, 484168, 748199, 487963, 999159, 784135, 454812, 500000, 1000000]
         }
       ],
       chart: {
@@ -42,10 +42,10 @@ export class HomeComponent {
         type: "bar"
       },
       title: {
-        text: "My First Angular Chart"
+        text: "Total Ventas Anual"
       },
       xaxis: {
-        categories: ["Jan", "Feb",  "Mar",  "Apr",  "May",  "Jun",  "Jul",  "Aug", "Sep"]
+        categories: ["Ene", "Feb",  "Mar",  "Abr",  "May",  "Jun",  "Jul",  "Ago", "Sep"]
       }
     };
   }

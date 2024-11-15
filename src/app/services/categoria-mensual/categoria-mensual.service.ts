@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CategoriaSucursalResumen {
+  totalCantidad: any;
   codigo: number;
   sucursal: number;
   cantidad: number;
-  valor: number;
-  valorIva: number;
-  costo: number;
+  totalValor: number;
+  totalValorIva: number;
+  totalCosto: number;
 }
 @Injectable({
   providedIn: 'root'

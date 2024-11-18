@@ -1,26 +1,26 @@
-*{
-  font-family: 'Poppins', sans-serif;
+* {
+  font-family: "Poppins", sans-serif;
 }
 
 .navbar-text {
-    font-size: 1.5rem; /* Ajusta el tamaño según tus necesidades */
-    font-weight: bold;
-  }
+  font-size: 1.5rem; /* Ajusta el tamaño según tus necesidades */
+  font-weight: bold;
+}
 
-  .logo-img {
-    height: 30px; /* Ajusta la altura según tus necesidades */
-    width: auto;
-  }
+.logo-img {
+  height: 30px; /* Ajusta la altura según tus necesidades */
+  width: auto;
+}
 
-  .flex-grow-1 {
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
-  }
-  
-  .sidebar.active ~ .flex-grow-1 {
-    margin-left: 250px; /* Ajusta el contenido principal cuando la barra lateral está activa */
-  }
-  
-  .nav-item .nav-link {
-    font-size: 0.85rem; /* Ajusta el valor según tus necesidades */
-  }
+.flex-grow-1 {
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.active ~ .flex-grow-1 {
+  margin-left: 250px; /* Ajusta el contenido principal cuando la barra lateral está activa */
+}
+
+.nav-item .nav-link {
+  font-size: 0.85rem; /* Ajusta el valor según tus necesidades */
+}

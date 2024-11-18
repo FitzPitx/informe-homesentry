@@ -1,10 +1,13 @@
 <div id="chart">
-    <apx-chart
-      [series]="series"
-      [chart]="chart"
-      [xaxis]="xaxis"
-      [title]="title"
-      [dataLabels]="dataLabels"
-      [plotOptions]="plotOptions">
-    </apx-chart>
-  </div>
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+    [dataLabels]="chartOptions.dataLabels"
+    [tooltip]="chartOptions.tooltip"
+    [plotOptions]="chartOptions.plotOptions"
+    [legend]="chartOptions.legend"
+    [title]="chartOptions.title"
+  ></apx-chart>
+</div>

@@ -1,7 +1,34 @@
 import { Component,OnInit } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexDataLabels, ApexPlotOptions } from 'ng-apexcharts';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexLegend,
+  ApexStroke,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+  ApexTitleSubtitle,
+} from "ng-apexcharts";
 import { CategoriaMensualService } from '../../services/categoria-mensual/categoria-mensual.service';
 import { NgApexchartsModule } from 'ng-apexcharts';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: ApexXAxis;
+  fill: ApexFill;
+  tooltip: ApexTooltip;
+  stroke: ApexStroke;
+  legend: ApexLegend;
+  title: ApexTitleSubtitle;
+};
 
 @Component({
   selector: 'app-categoria-ventas',
@@ -13,68 +40,77 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   styleUrl: './categoria-ventas.component.scss'
 })
 export class CategoriaVentasComponent implements OnInit{
-
-  public series: ApexAxisChartSeries = [];
-  public chart: ApexChart = {
-    type: 'bar',
-    height: 350,
-    toolbar: {
-      show: true
-    }
-  };
+  public chartOptions!: Partial<ChartOptions>;
   
-  public xaxis: ApexXAxis = { categories: [] };
-  public title: ApexTitleSubtitle = { text: 'Resumen de Ventas por Sucursal', align: 'center' };
-  public dataLabels: ApexDataLabels = { enabled: false };
-  public plotOptions: ApexPlotOptions = {
-    bar: {
-      horizontal: false,
-      columnWidth: '55%',
-      dataLabels: {
-        position: 'top'
-      }
-    }
-  };
+  constructor(private categoriaService: CategoriaMensualService){}
 
-  constructor(private categoriaService: CategoriaMensualService) {}
+  ngOnInit(): void {
+    this.categoriaService.getResumenCategoria().subscribe((data) => {
+      const categories = data.map((item: any) => item.nombreCategoria);
+      const totalCantidad = data.map((item: any) => item.totalCantidad);
+      const totalValor = data.map((item: any) => item.totalValor);
+      const totalValorIva = data.map((item: any) => item.totalValorIva);
+      const totalCosto = data.map((item: any) => item.totalCosto);
 
-    ngOnInit(): void {
-    this.categoriaService.getResumen().subscribe(data => {
-      const sucursales = [...new Set(data.map(item => item.sucursal))];
-      const seriesData = [
-        {
-          name: 'Cantidad',
-          data: sucursales.map(sucursal => {
-            const item = data.find(d => d.sucursal === sucursal);
-            return item ? item.totalCantidad : 0;
-          })
+      this.chartOptions = {
+        series: [
+          {
+            name: 'Total Cantidad',
+            data: totalCantidad,
+          },
+          {
+            name: 'Total Valor',
+            data: totalValor,
+          },
+          {
+            name: 'Total Valor IVA',
+            data: totalValorIva,
+          },
+          {
+            name: 'Total Costo',
+            data: totalCosto,
+          },
+        ],
+        chart: {
+          type: 'bar',
+          height: 450,
         },
-        {
-          name: 'Valor',
-          data: sucursales.map(sucursal => {
-            const item = data.find(d => d.sucursal === sucursal);
-            return item ? item.totalValor : 0;
-          })
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+          },
         },
-        {
-          name: 'Valor IVA',
-          data: sucursales.map(sucursal => {
-            const item = data.find(d => d.sucursal === sucursal);
-            return item ? item.totalValorIva : 0;
-          })
+        dataLabels: {
+          enabled: false,
         },
-        {
-          name: 'Costo',
-          data: sucursales.map(sucursal => {
-            const item = data.find(d => d.sucursal === sucursal);
-            return item ? item.totalCosto : 0;
-          })
-        }
-      ];
-
-      this.series = seriesData;
-      this.xaxis = {
-        categories: sucursales.map(sucursal => `Sucursal ${sucursal}`)
+        xaxis: {
+          categories: categories,
+        },
+        yaxis: {
+          title: {
+            text: 'Valores',
+          },
+          labels: {
+            formatter: (val: number) => {
+              return val.toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              });
+            },
+          },
+        },
+        tooltip: {
+          y: {
+            formatter: (val: number) => val.toLocaleString(),
+          },
+        },
+        legend: {
+          position: 'top',
+        },
+        title: {
+          text: 'Resumen de Ventas por Categoría',
+          align: 'center',
+        },
       };
     });
   }

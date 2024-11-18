@@ -15,11 +15,30 @@ export interface CategoriaSucursalResumen {
   providedIn: 'root'
 })
 export class CategoriaMensualService {
-  private apiUrl = 'http://localhost:8080/api/categorias22/categorias-sucursal-resumen';
+  private apiUrl22 = 'http://localhost:8080/api/categorias22';
+
+  private apiUrl23 = 'http://localhost:8080/api/categorias23';
+
+  private apiUrl24 = 'http://localhost:8080/api/categorias24';
 
   constructor(private http: HttpClient) {}
 
+  getResumenSucursal():
+  Observable<any> {
+    return this.http.get(`${this.apiUrl22}/resumen-sucursales`)
+  }
+
+  getResumenCategoria():
+  Observable<any> {
+    return this.http.get(`${this.apiUrl22}/resumen-categorias`)
+  }
+
+  getResumenCategoriaMes():
+  Observable<any> {
+    return this.http.get(`${this.apiUrl22}/resumen-categorias-mes`)
+  }
+    
   getResumen(): Observable<CategoriaSucursalResumen[]> {
-    return this.http.get<CategoriaSucursalResumen[]>(this.apiUrl);
+    return this.http.get<CategoriaSucursalResumen[]>(`${this.apiUrl22}/categorias-sucursal-resumen`);
   }
 }

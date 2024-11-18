@@ -49,4 +49,38 @@
     </form>
 </div>
 
-<app-categoria-ventas></app-categoria-ventas>
+<div class="table-responsive" id="demoW">
+    <table class="table  table-sm table-responsive-sm" id="demoT">
+      <thead class="align-middle">
+
+        <tr>
+          <th scope="col" rowspan="2">Código</th>
+          <th scope="col" rowspan="2">Nombre</th>
+          <th scope="col" colspan="4" *ngFor="let mes of meses">{{ mes }}</th>
+        </tr>
+
+        <tr>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Valor Iva</th>
+          <th scope="col">Costo</th> 
+        </tr>
+        
+      </thead>
+      <tbody>
+        <tr *ngFor="let categoria of categorias">
+          <td>{{ categoria.codigo }}</td>
+          <td>{{ categoria.nombre }}</td>
+          <ng-container *ngFor="let mes of categoria.meses">
+            <td>{{ mes.cantidad }}</td>
+            <td>{{ mes.valor | number:'1.2-2' }}</td>
+            <td>{{ mes.valorIva | number:'1.2-2' }}</td>
+            <td>{{ mes.costo | number:'1.2-2' }}</td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<app-categoria-ventas></app-categoria-ventas> 
+

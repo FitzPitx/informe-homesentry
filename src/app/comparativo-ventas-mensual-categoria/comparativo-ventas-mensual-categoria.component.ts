@@ -5,8 +5,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
 import { CategoriaMensualService } from '../services/categoria-mensual/categoria-mensual.service';
+import { DataTablesModule } from 'angular-datatables';
+import { Config } from 'datatables.net';
 
-
+export interface DataTablesResponse {
+  data: any[];
+  draw: number;
+  recordsTotal: number;
+  recordsFiltered: number;
+}
 
 @Component({
   selector: 'app-comparativo-ventas-mensual-categoria',
@@ -16,19 +23,17 @@ import { CategoriaMensualService } from '../services/categoria-mensual/categoria
     FormsModule,
     ReactiveFormsModule,
     CategoriaVentasComponent,
+    DataTablesModule,
   ],
   templateUrl: './comparativo-ventas-mensual-categoria.component.html',
   styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss']
 })
 export class ComparativoVentasMensualCategoriaComponent implements OnInit {
 
+  dtOptions: Config = {};
   sucursales: any[] = [];
   filterForm: FormGroup;
   public categorias: any[] = []; // Almacena los datos de las categorías formateadas
-  public meses = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
 
   constructor(
     private sucursalService: SucursalServiceService,
@@ -48,39 +53,61 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
       this.sucursales = data;
     });
 
-    this.categoriaService.getResumenCategoriaMes().subscribe((data) => {
-      // Transformar los datos para adaptarlos a la tabla
-      const categoriasMap: { [codigo: number]: any } = {};
 
-      data.forEach((item: any) => {
-        const codigo = item.codigoCategoria;
-        if (!categoriasMap[codigo]) {
-          // Inicializar la categoría si no existe
-          categoriasMap[codigo] = {
-            codigo: item.codigoCategoria,
-            nombre: item.nombreCategoria,
-            meses: Array(12).fill(null).map(() => ({
-              cantidad: 0,
-              valor: 0,
-              valorIva: 0,
-              costo: 0
-            }))
-          };
+    this.dtOptions = {
+      processing: true,
+      pageLength: 10,
+      pagingType: 'full_numbers',
+      language: {
+        lengthMenu: 'Mostrar _MENU_ registros por página',
+        zeroRecords: 'No se encontraron resultados',
+        info: 'Mostrando página _PAGE_ de _PAGES_',
+        infoEmpty: 'No hay registros disponibles',
+        infoFiltered: '(filtrado de _MAX_ registros totales)',
+        search: 'Buscar:',
+        paginate: {
+          first: 'Primero',
+          last: 'Último',
+          next: 'Siguiente',
+          previous: 'Anterior'
+        },
+      },
+
+      ajax: (dataTablesParameters: any, callback) => {
+        this.categoriaService.getResumenCategoriaMes(dataTablesParameters)
+          .subscribe((resp: DataTablesResponse) => {
+            callback({
+              draw: resp.draw,
+              recordsTotal: resp.recordsTotal,
+              recordsFiltered: resp.recordsFiltered,
+              data: resp.data
+            });
+          });
+      },
+      columns: [
+        { title: 'Código Categoría', data: 'codigoCategoria' },
+        { title: 'Nombre Categoría', data: 'nombreCategoria' },
+        { title: 'Mes', data: 'nombreMes' },
+        { title: 'Total Cantidad', data: 'totalCantidad' },
+        {
+          title: 'Total Valor',
+          data: 'totalValor',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$')
+        },
+        {
+          title: 'Total Valor IVA',
+          data: 'totalValorIva',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$')
+        },
+        {
+          title: 'Total Costo',
+          data: 'totalCosto',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$')
         }
-        // Asignar los valores al mes correspondiente
-        const mesIndex = item.mes - 1; // Restar 1 porque los meses están indexados desde 0
-        categoriasMap[codigo].meses[mesIndex] = {
-          cantidad: item.totalCantidad,
-          valor: item.totalValor,
-          valorIva: item.totalValorIva,
-          costo: item.totalCosto
-        };
-      });
-
-      // Convertir el mapa en un array
-      this.categorias = Object.values(categoriasMap);
-    });
+      ]
+    };
   }
+    
 
   onSubmit(): void {
     const { sucursal, year } = this.filterForm.value;

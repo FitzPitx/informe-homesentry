@@ -33,7 +33,7 @@ export class CategoriaMensualService {
     return this.http.get(`${this.apiUrl22}/resumen-categorias`)
   }
 
-  getResumenCategoriaMes():
+  getResumenCategoriaMes(dataTablesParameters: any):
   Observable<any> {
     return this.http.get(`${this.apiUrl22}/resumen-categorias-mes`)
   }

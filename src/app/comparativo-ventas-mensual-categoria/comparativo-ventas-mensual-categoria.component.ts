@@ -33,6 +33,7 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   dtOptions: Config = {};
   sucursales: any[] = [];
   filterForm: FormGroup;
+  results: any[] = [];
   public categorias: any[] = []; // Almacena los datos de las categorías formateadas
 
   constructor(
@@ -48,14 +49,10 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Cargar las sucursales desde el servicio
-    this.sucursalService.getSucursales().subscribe((data: any[]) => {
-      this.sucursales = data;
-    });
-
 
     this.dtOptions = {
       processing: true,
+      serverSide: false,
       pageLength: 10,
       pagingType: 'full_numbers',
       language: {
@@ -69,55 +66,95 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
           first: 'Primero',
           last: 'Último',
           next: 'Siguiente',
-          previous: 'Anterior'
+          previous: 'Anterior',
         },
       },
 
       ajax: (dataTablesParameters: any, callback) => {
-        this.categoriaService.getResumenCategoriaMes(dataTablesParameters)
-          .subscribe((resp: DataTablesResponse) => {
+        const sucursal = this.filterForm.get('sucursal')?.value;
+        const year = this.filterForm.get('year')?.value;
+
+        this.categoriaService
+          .getResumenMensual(sucursal, year)
+          .subscribe((resp: any) => {
             callback({
-              draw: resp.draw,
+              draw: dataTablesParameters.draw,
               recordsTotal: resp.recordsTotal,
               recordsFiltered: resp.recordsFiltered,
-              data: resp.data
+              data: resp.data,
             });
           });
       },
+
       columns: [
         { title: 'Código Categoría', data: 'codigoCategoria' },
         { title: 'Nombre Categoría', data: 'nombreCategoria' },
-        { title: 'Mes', data: 'nombreMes' },
-        { title: 'Total Cantidad', data: 'totalCantidad' },
+        { title: 'Mes', data: 'mes' },
+        { title: 'Sucursal', data: 'nombreSucursal' },
         {
-          title: 'Total Valor',
-          data: 'totalValor',
-          render: $.fn.dataTable.render.number(',', '.', 2, '$')
+          title: 'Venta Actual',
+          data: 'ventaActual',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$'),
         },
         {
-          title: 'Total Valor IVA',
-          data: 'totalValorIva',
-          render: $.fn.dataTable.render.number(',', '.', 2, '$')
+          title: 'Utilidad Actual',
+          data: 'utilidadActual',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$'),
         },
         {
-          title: 'Total Costo',
-          data: 'totalCosto',
-          render: $.fn.dataTable.render.number(',', '.', 2, '$')
-        }
-      ]
+          title: 'Margen Actual',
+          data: 'margenActual',
+          render: $.fn.dataTable.render.number(',', '.', 2, '%'),
+        },
+        {
+          title: 'Venta Anterior',
+          data: 'ventaAnterior',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$'),
+        },
+        {
+          title: 'Utilidad Anterior',
+          data: 'utilidadAnterior',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$'),
+        },
+        {
+          title: 'Margen Anterior',
+          data: 'margenAnterior',
+          render: $.fn.dataTable.render.number(',', '.', 2, '%'),
+        },
+        {
+          title: 'Diferencia Ventas',
+          data: 'diferenciaVentas',
+          render: $.fn.dataTable.render.number(',', '.', 2, '$'),
+        },
+        {
+          title: 'Variación Ventas',
+          data: 'variacionVentas',
+          render: $.fn.dataTable.render.number(',', '.', 2, '%'),
+        },
+      ],
     };
   }
     
 
-  onSubmit(): void {
-    const { sucursal, year } = this.filterForm.value;
+ // Método que se ejecuta al enviar el formulario
+ onSubmit(): void {
+  const { sucursal, year } = this.filterForm.value;
 
-    if (sucursal && year) {
-      console.log('Filtros aplicados:', { sucursal, year });
-      // Lógica para filtrar datos según la sucursal y el año seleccionados
-    } else {
-      console.log('Por favor, seleccione tanto la sucursal como el año para aplicar los filtros.');
-    }
+  if (!sucursal || !year) {
+    alert('Por favor selecciona una sucursal y un año.');
+    return;
   }
 
+  // Llamar al servicio para obtener los resultados
+  this.categoriaService.getResumenMensual(sucursal, year).subscribe({
+    next: (data) => {
+      this.results = data; // Guardar los resultados para mostrarlos en la tabla
+      console.log('Datos recibidos:', data);
+    },
+    error: (err) => {
+      console.error('Error al obtener los datos:', err);
+      alert('Ocurrió un error al obtener los datos. Verifica la conexión al servidor.');
+    }
+  });
+}
 }

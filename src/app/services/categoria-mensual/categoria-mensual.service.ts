@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CategoriaSucursalResumen {
@@ -15,30 +15,34 @@ export interface CategoriaSucursalResumen {
   providedIn: 'root'
 })
 export class CategoriaMensualService {
-  private apiUrl22 = 'http://localhost:8080/api/categorias22';
-
-  private apiUrl23 = 'http://localhost:8080/api/categorias23';
-
-  private apiUrl24 = 'http://localhost:8080/api/categorias24';
+  private apiUrl = 'http://localhost:8080/api/acumulado';
 
   constructor(private http: HttpClient) {}
 
-  getResumenSucursal():
-  Observable<any> {
-    return this.http.get(`${this.apiUrl22}/resumen-sucursales`)
-  }
-
   getResumenCategoria():
   Observable<any> {
-    return this.http.get(`${this.apiUrl22}/resumen-categorias`)
+    return this.http.get(`${this.apiUrl}/resumen-categorias`)
   }
 
   getResumenCategoriaMes(dataTablesParameters: any):
   Observable<any> {
-    return this.http.get(`${this.apiUrl22}/resumen-categorias-mes`)
+    return this.http.get(`${this.apiUrl}/resumen-categorias-mes`)
   }
+
+  /**
+   * Realiza una solicitud al backend con los parámetros de sucursal y año.
+   * @param sucursal - ID de la sucursal seleccionada
+   * @param year - Año seleccionado
+   */
+
+  getResumenMensual(sucursal: number, year: number): Observable<any> {
+    let params = new HttpParams()
+      .set('sucursal', sucursal.toString())
+      .set('year', year.toString());
+  
+    return this.http.get(`${this.apiUrl}/resumen-categorias-mensual`, { params });
+  }
+
+
     
-  getResumen(): Observable<CategoriaSucursalResumen[]> {
-    return this.http.get<CategoriaSucursalResumen[]>(`${this.apiUrl22}/categorias-sucursal-resumen`);
-  }
 }

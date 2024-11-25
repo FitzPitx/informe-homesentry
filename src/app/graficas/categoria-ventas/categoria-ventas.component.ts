@@ -2,8 +2,6 @@ import { Component,OnInit } from '@angular/core';
 import {
   ApexAxisChartSeries,
   ApexChart,
-  ChartComponent,
-  ApexDataLabels,
   ApexPlotOptions,
   ApexYAxis,
   ApexLegend,
@@ -33,9 +31,8 @@ export type ChartOptions = {
 @Component({
     selector: 'app-categoria-ventas',
     imports: [
-        NgApexchartsModule
+      NgApexchartsModule
     ],
-    standalone: true,
     templateUrl: './categoria-ventas.component.html',
     styleUrl: './categoria-ventas.component.scss'
 })

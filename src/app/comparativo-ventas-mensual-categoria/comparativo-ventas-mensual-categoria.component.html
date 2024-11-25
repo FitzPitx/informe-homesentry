@@ -8,7 +8,7 @@
                 <i class="bi bi-building"></i>
             </span>
             <select class="form-select form-select-sm" formControlName="sucursal">
-                <option value="" disabled selected>Sucursal</option>
+                <option value="" disabled>Sucursal</option>
                 <option value="1">001 - Home Sentry Norte</option>
                 <option value="21">021 - Home Sentry Plaza Americas</option>
                 <option value="32">032 - Home Sentry Titan</option>
@@ -50,18 +50,75 @@
 </div>
 
 
-<!-- <div class="table-responsive">
-  <table datatable [dtOptions]="dtOptions" class="table table-striped table-bordered" id="datatableSummary">
-  </table>
-</div> -->
+<div class="table-responsive small">
+    <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="listaVentasDataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="codigoCategoria">
+            <th mat-sort-header="codigoCategoria" mat-header-cell *matHeaderCellDef> Código </th>
+            <td mat-cell *matCellDef="let element"> {{element.codigoCategoria}} </td>
+        </ng-container>
 
-<!-- Datatable de la informacion -->
-<app-datatable-ventas-mensuales></app-datatable-ventas-mensuales>
+        <ng-container matColumnDef="nombreCategoria">
+            <th mat-sort-header="nombreCategoria" mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.nombreCategoria}} </td>
+        </ng-container>
 
+        <ng-container matColumnDef="mes">
+            <th mat-header-cell *matHeaderCellDef> Mes </th>
+            <td mat-cell *matCellDef="let element"> {{element.mes}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreSucursal">
+            <th mat-header-cell *matHeaderCellDef> Sucursal </th>
+            <td mat-cell *matCellDef="let element"> {{element.nombreSucursal}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ventaActual">
+            <th mat-header-cell *matHeaderCellDef> Venta Actual </th>
+            <td mat-cell *matCellDef="let element"> {{element.ventaActual}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="utilidadActual">
+            <th mat-header-cell *matHeaderCellDef> Utilidad Actual </th>
+            <td mat-cell *matCellDef="let element"> {{element.utilidadActual}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="margenActual">
+            <th mat-header-cell *matHeaderCellDef> Margen Actual </th>
+            <td mat-cell *matCellDef="let element"> {{element.margenActual}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ventaAnterior">
+            <th mat-header-cell *matHeaderCellDef> Venta Anterior </th>
+            <td mat-cell *matCellDef="let element"> {{element.ventaAnterior}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="utilidadAnterior">
+            <th mat-header-cell *matHeaderCellDef> Utilidad Anterior </th>
+            <td mat-cell *matCellDef="let element"> {{element.utilidadAnterior}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="margenAnterior">
+            <th mat-header-cell *matHeaderCellDef> Margen Anterior </th>
+            <td mat-cell *matCellDef="let element"> {{element.margenAnterior}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diferenciaVentas">
+            <th mat-header-cell *matHeaderCellDef> Diferencia Ventas </th>
+            <td mat-cell *matCellDef="let element"> {{element.diferenciaVentas}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="variacionVentas">
+            <th mat-header-cell *matHeaderCellDef> Variación Ventas </th>
+            <td mat-cell *matCellDef="let element"> {{element.variacionVentas}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Selecciona una página">
+    </mat-paginator>
+</div>
 
 <br><br><br>
 
-
-
-<app-categoria-ventas></app-categoria-ventas> 
-
+<app-categoria-ventas></app-categoria-ventas>

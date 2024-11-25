@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 // Importacion de componentes
-import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet,
-        HomeComponent,
+    imports: [
+        RouterOutlet,
         FormsModule,
         CommonModule,
-        RouterLink, RouterLinkActive
+        RouterLink
     ],
     standalone: true,
     templateUrl: './app.component.html',

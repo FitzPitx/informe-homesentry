@@ -12,5 +12,5 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideAnimationsAsync(),
     provideHttpClient(),
-    NgApexchartsModule],
+    NgApexchartsModule, provideAnimationsAsync()],
 };

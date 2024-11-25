@@ -1,34 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
 import { CategoriaMensualService } from '../services/categoria-mensual/categoria-mensual.service';
-import { Config } from 'datatables.net';
-import { DatatableVentasMensualesComponent } from '../datatables/datatable-ventas-mensuales/datatable-ventas-mensuales.component';
-
+import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
+import { dataTableResponse } from '../models/datatable-interface';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {Sort, MatSortModule} from '@angular/material/sort';
 @Component({
-    selector: 'app-comparativo-ventas-mensual-categoria',
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CategoriaVentasComponent,
-        DatatableVentasMensualesComponent
-    ],
-    templateUrl: './comparativo-ventas-mensual-categoria.component.html',
-    styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss']
+  selector: 'app-comparativo-ventas-mensual-categoria',
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatPaginator,
+    CategoriaVentasComponent,
+    MatSortModule
+  ],
+  templateUrl: './comparativo-ventas-mensual-categoria.component.html',
+  styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss'],
 })
 export class ComparativoVentasMensualCategoriaComponent implements OnInit {
-  dtOptions: Config = {};
-  sucursales: any[] = [];
+  
+  listaVentas!: dataTableResponse[];
   filterForm: FormGroup;
-  results: any[] = [];
-  public categorias: any[] = []; // Almacena los datos de las categorías formateadas
+
+  listaVentasDataSource = new MatTableDataSource<dataTableResponse>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  displayedColumns: string[] = [
+    'codigoCategoria',
+    'nombreCategoria',
+    'mes',
+    'nombreSucursal',
+    'ventaActual',
+    'utilidadActual',
+    'margenActual',
+    'ventaAnterior',
+    'utilidadAnterior',
+    'margenAnterior',
+    'diferenciaVentas',
+    'variacionVentas',
+  ];
 
   constructor(
-    private _categoriaService: CategoriaMensualService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _categoriaService: CategoriaMensualService
   ) {
     // Inicializar el formulario reactivo
     this.filterForm = this.fb.group({
@@ -38,23 +58,40 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.getResumenMensual();
-  }
-
-  getResumenMensual(){
-    const { sucursal, year } = this.filterForm.value;
-    this._categoriaService.getResumenMensual(sucursal, year).subscribe({
-      next:(resp) => {
-        console.log(resp);
-      }, 
+    let currenYear: number = new Date().getFullYear();
+    this._categoriaService.getResumenMensual(1, currenYear).subscribe({
+      next: (resp) => {
+        this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(resp);
+        this.listaVentasDataSource.paginator = this.paginator;
+      },
       error: (err) => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
   // Método que se ejecuta al enviar el formulario
   onSubmit() {
-    this.getResumenMensual();
+    const { sucursal, year } = this.filterForm.value;
+    if (sucursal && year) {
+      this._categoriaService.getResumenMensual(sucursal, year).subscribe({
+        next: (resp) => {
+          this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(resp);
+          this.listaVentasDataSource.paginator = this.paginator;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    } else {
+      alert('Por favor selecciona una sucursal y un año.');
+    }
   }
+
+  sortData(sort: Sort){
+    
+  }
+
+
+
 }

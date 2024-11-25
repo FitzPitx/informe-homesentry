@@ -19,7 +19,6 @@ import { LineasServiceService } from '../services/linea-service/lineas-service.s
 })
 export class ComparativoVentas3AnosComponent implements OnInit {
 
-  range: FormGroup;
   sucursales: any[] = [];
   categorias: any[] = [];
   subcategorias: any[] = [];
@@ -27,17 +26,13 @@ export class ComparativoVentas3AnosComponent implements OnInit {
   selectedCategoryId: number = 0;
 
   constructor(
-    private fb: FormBuilder,
     private sucursalService: SucursalServiceService,
     private categoriasService: CategoriasServiceService,
     private subcategoriasService: SubcategoriasServiceService,
     private lineasService: LineasServiceService
-  ) {
-    this.range = this.fb.group({
-      start:[''],
-      end:['']
-    });
-  }
+  ) {}
+
+  dates = new FormControl('');
 
 
 

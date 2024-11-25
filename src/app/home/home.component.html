@@ -5,10 +5,10 @@
 
 <div class="text-lg-center">
   <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [xaxis]="chartOptions.xaxis"
-    [title]="chartOptions.title"
+    [series]="chartOptions.series || []"
+    [chart]="chartOptions.chart || { type: 'line' }"
+    [xaxis]="chartOptions.xaxis || {}"
+    [title]="chartOptions.title || {}"
   ></apx-chart>
 </div>
 

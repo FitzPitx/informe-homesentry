@@ -1,16 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { dataTableResponse } from '../../models/datatable-interface';
 
-export interface CategoriaSucursalResumen {
-  totalCantidad: any;
-  codigo: number;
-  sucursal: number;
-  cantidad: number;
-  totalValor: number;
-  totalValorIva: number;
-  totalCosto: number;
-}
 @Injectable({
   providedIn: 'root'
 })

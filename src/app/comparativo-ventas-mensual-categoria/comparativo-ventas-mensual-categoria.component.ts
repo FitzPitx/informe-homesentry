@@ -8,17 +8,16 @@ import { Config } from 'datatables.net';
 import { DatatableVentasMensualesComponent } from '../datatables/datatable-ventas-mensuales/datatable-ventas-mensuales.component';
 
 @Component({
-  selector: 'app-comparativo-ventas-mensual-categoria',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CategoriaVentasComponent,
-    DatatableVentasMensualesComponent
-  ],
-  templateUrl: './comparativo-ventas-mensual-categoria.component.html',
-  styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss'],
+    selector: 'app-comparativo-ventas-mensual-categoria',
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CategoriaVentasComponent,
+        DatatableVentasMensualesComponent
+    ],
+    templateUrl: './comparativo-ventas-mensual-categoria.component.html',
+    styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss']
 })
 export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   dtOptions: Config = {};

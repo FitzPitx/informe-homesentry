@@ -31,13 +31,13 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-categoria-ventas',
-  standalone: true,
-  imports: [
-    NgApexchartsModule
-  ],
-  templateUrl: './categoria-ventas.component.html',
-  styleUrl: './categoria-ventas.component.scss'
+    selector: 'app-categoria-ventas',
+    imports: [
+        NgApexchartsModule
+    ],
+    standalone: true,
+    templateUrl: './categoria-ventas.component.html',
+    styleUrl: './categoria-ventas.component.scss'
 })
 export class CategoriaVentasComponent implements OnInit{
   public chartOptions!: Partial<ChartOptions>;

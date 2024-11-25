@@ -16,13 +16,12 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    NgApexchartsModule
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    imports: [
+        NgApexchartsModule
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 

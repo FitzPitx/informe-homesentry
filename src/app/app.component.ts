@@ -5,17 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet,  
-    HomeComponent,
-    FormsModule,
-    CommonModule,
-    RouterLink, RouterLinkActive
-  ],
-
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [RouterOutlet,
+        HomeComponent,
+        FormsModule,
+        CommonModule,
+        RouterLink, RouterLinkActive
+    ],
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent{
   title = 'informe-homesentry';

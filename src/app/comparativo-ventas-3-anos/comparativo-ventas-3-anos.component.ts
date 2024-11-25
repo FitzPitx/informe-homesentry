@@ -7,14 +7,15 @@ import { SucursalServiceService } from '../services/sucursal-service/sucursal-se
 import { LineasServiceService } from '../services/linea-service/lineas-service.service';
 
 @Component({
-  selector: 'app-comparativo-ventas-3-anos',
-  standalone: true,
-  imports: [
-    FormsModule, 
-    ReactiveFormsModule,
-    CommonModule],
-  templateUrl: './comparativo-ventas-3-anos.component.html',
-  styleUrls: ['./comparativo-ventas-3-anos.component.scss'],
+    selector: 'app-comparativo-ventas-3-anos',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule
+    ],
+    templateUrl: './comparativo-ventas-3-anos.component.html',
+    styleUrls: ['./comparativo-ventas-3-anos.component.scss'], 
+    standalone: true
 })
 export class ComparativoVentas3AnosComponent implements OnInit {
 

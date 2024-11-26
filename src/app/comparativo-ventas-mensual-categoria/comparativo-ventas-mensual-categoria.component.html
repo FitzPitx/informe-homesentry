@@ -49,11 +49,20 @@
     </form>
 </div>
 
+<div class="container">
+    <mat-form-field class="">
+        <mat-label>Filtrar por Nombre</mat-label>
+        <input matInput placeholder="Ingrese un texto" [(ngModel)]="searchText" (keyup)="onInputChange()">
+    </mat-form-field>
+</div>
+
+
 
 <div class="table-responsive small">
-    <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="listaVentasDataSource" class="mat-elevation-z8">
+    <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="listaVentasDataSource"
+        class="table table-striped table-hover table-sm">
         <ng-container matColumnDef="codigoCategoria">
-            <th mat-sort-header="codigoCategoria" mat-header-cell *matHeaderCellDef> Código </th>
+            <th mat-sort-header="codigoCategoria" mat-header-cell *matHeaderCellDef > Código </th>
             <td mat-cell *matCellDef="let element"> {{element.codigoCategoria}} </td>
         </ng-container>
 
@@ -63,53 +72,63 @@
         </ng-container>
 
         <ng-container matColumnDef="mes">
-            <th mat-header-cell *matHeaderCellDef> Mes </th>
+            <th mat-sort-header="mes" mat-header-cell *matHeaderCellDef> Mes </th>
             <td mat-cell *matCellDef="let element"> {{element.mes}} </td>
         </ng-container>
 
         <ng-container matColumnDef="nombreSucursal">
-            <th mat-header-cell *matHeaderCellDef> Sucursal </th>
+            <th mat-sort-header="nombreSucursal" mat-header-cell *matHeaderCellDef> Sucursal </th>
             <td mat-cell *matCellDef="let element"> {{element.nombreSucursal}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ventaActual">
             <th mat-header-cell *matHeaderCellDef> Venta Actual </th>
-            <td mat-cell *matCellDef="let element"> {{element.ventaActual}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.ventaActual | number:'1.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costoActual">
+            <th mat-header-cell *matHeaderCellDef> Costo Actual</th>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.costoActual | number:'1.0-0'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="utilidadActual">
             <th mat-header-cell *matHeaderCellDef> Utilidad Actual </th>
-            <td mat-cell *matCellDef="let element"> {{element.utilidadActual}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.utilidadActual | number:'1.0-0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="margenActual">
             <th mat-header-cell *matHeaderCellDef> Margen Actual </th>
-            <td mat-cell *matCellDef="let element"> {{element.margenActual}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.margenActual | number:'1.0-0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ventaAnterior">
             <th mat-header-cell *matHeaderCellDef> Venta Anterior </th>
-            <td mat-cell *matCellDef="let element"> {{element.ventaAnterior}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.ventaAnterior | number:'1.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costoAnterior">
+            <th mat-header-cell *matHeaderCellDef> Costo Anterior</th>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.costoAnterior | number:'1.0-0'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="utilidadAnterior">
             <th mat-header-cell *matHeaderCellDef> Utilidad Anterior </th>
-            <td mat-cell *matCellDef="let element"> {{element.utilidadAnterior}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.utilidadAnterior | number:'1.0-0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="margenAnterior">
             <th mat-header-cell *matHeaderCellDef> Margen Anterior </th>
-            <td mat-cell *matCellDef="let element"> {{element.margenAnterior}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.margenAnterior | number:'1.0-0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="diferenciaVentas">
             <th mat-header-cell *matHeaderCellDef> Diferencia Ventas </th>
-            <td mat-cell *matCellDef="let element"> {{element.diferenciaVentas}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.diferenciaVentas | number:'1.0-0'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="variacionVentas">
             <th mat-header-cell *matHeaderCellDef> Variación Ventas </th>
-            <td mat-cell *matCellDef="let element"> {{element.variacionVentas}} </td>
+            <td mat-cell *matCellDef="let element" class="text-end"> {{element.variacionVentas | number:'1.0-0'}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

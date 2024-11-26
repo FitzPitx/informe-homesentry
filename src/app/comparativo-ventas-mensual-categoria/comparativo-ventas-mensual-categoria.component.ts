@@ -6,8 +6,12 @@ import { CategoriaMensualService } from '../services/categoria-mensual/categoria
 import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
 import { dataTableResponse } from '../models/datatable-interface';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {Sort, MatSortModule} from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { Sort, MatSortModule } from '@angular/material/sort';
+import { clear } from 'console';
+
 @Component({
   selector: 'app-comparativo-ventas-mensual-categoria',
   imports: [
@@ -18,15 +22,19 @@ import {Sort, MatSortModule} from '@angular/material/sort';
     MatPaginatorModule,
     MatPaginator,
     CategoriaVentasComponent,
-    MatSortModule
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './comparativo-ventas-mensual-categoria.component.html',
   styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss'],
 })
 export class ComparativoVentasMensualCategoriaComponent implements OnInit {
-  
-  listaVentas!: dataTableResponse[];
+  listaVentas: dataTableResponse[] = [];
   filterForm: FormGroup;
+
+  searchText : string = "";
+  timeOut: any;
 
   listaVentasDataSource = new MatTableDataSource<dataTableResponse>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -37,9 +45,11 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     'mes',
     'nombreSucursal',
     'ventaActual',
+    'costoActual',
     'utilidadActual',
     'margenActual',
     'ventaAnterior',
+    'costoAnterior',
     'utilidadAnterior',
     'margenAnterior',
     'diferenciaVentas',
@@ -48,7 +58,7 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private _categoriaService: CategoriaMensualService
+    private _categoriaService: CategoriaMensualService,
   ) {
     // Inicializar el formulario reactivo
     this.filterForm = this.fb.group({
@@ -58,16 +68,6 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let currenYear: number = new Date().getFullYear();
-    this._categoriaService.getResumenMensual(1, currenYear).subscribe({
-      next: (resp) => {
-        this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(resp);
-        this.listaVentasDataSource.paginator = this.paginator;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
   }
 
   // Método que se ejecuta al enviar el formulario
@@ -76,8 +76,9 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     if (sucursal && year) {
       this._categoriaService.getResumenMensual(sucursal, year).subscribe({
         next: (resp) => {
-          this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(resp);
-          this.listaVentasDataSource.paginator = this.paginator;
+          console.log(resp);
+          this.listaVentas = resp;
+          this.feedDataSource(resp);
         },
         error: (err) => {
           console.log(err);
@@ -88,10 +89,63 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     }
   }
 
-  sortData(sort: Sort){
-    
+  feedDataSource(data: dataTableResponse[]) {
+    this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(
+      data
+    );
+    this.listaVentasDataSource.paginator = this.paginator;
+  }
+
+  sortData(sort: Sort) {
+    const data = this.listaVentas.slice();
+    if (!sort.active || sort.direction === '') {
+      this.feedDataSource(data);
+      return;
+    }
+
+    const sortedData = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'codigoCategoria':
+          return compare(a.codigoCategoria, b.codigoCategoria, isAsc);
+        case 'nombreCategoria':
+          return compare(a.nombreCategoria, b.nombreCategoria, isAsc);
+        case 'mes':
+          return compare(a.mes, b.mes, isAsc);
+        case 'nombreSucursal':
+          return compare(a.nombreSucursal, b.nombreSucursal, isAsc);
+        default:
+          return 0;
+      }
+    });
+
+    this.feedDataSource(sortedData);
   }
 
 
+  onInputChange() {
+    clearTimeout(this.timeOut);
+    this.timeOut = setTimeout(() => {
+      this.filterData();
+    }, 300);
+  }
 
+  filterData(){
+    const search = this.searchText;
+    const data = this.listaVentas.slice();
+    if (!search){
+      this.feedDataSource(data);
+      return;
+    }
+
+    const dataFiltered = data.filter((item) => {
+      return item.nombreCategoria.toLowerCase().includes(search.toLowerCase());
+    });
+
+    this.feedDataSource(dataFiltered);
+  }
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

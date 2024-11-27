@@ -2,7 +2,6 @@ export interface dataTableResponse {
   codigoCategoria: number;
   nombreCategoria: string;
   mes: string;
-  nombreSucursal: string;
   ventaActual: number;
   utilidadActual: number;
   margenActual: number;
@@ -10,5 +9,6 @@ export interface dataTableResponse {
   utilidadAnterior: number;
   margenAnterior: number;
   diferenciaVentas: number;
+  diferenciaUtilidad: number;
   variacionVentas: number;
 }

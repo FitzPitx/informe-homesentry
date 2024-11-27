@@ -37,7 +37,22 @@ export type ChartOptions = {
     styleUrl: './categoria-ventas.component.scss'
 })
 export class CategoriaVentasComponent implements OnInit{
-  public chartOptions!: Partial<ChartOptions>;
+  public chartOptions: Partial<ChartOptions> ={
+    series: [],
+    chart: {
+      type: 'bar',
+      height: 350
+    },
+    xaxis: {
+      categories: []
+    },
+    dataLabels: {
+      enabled: false
+    },
+    tooltip: {
+      enabled: true
+    }
+  };
   
   constructor(private categoriaService: CategoriaMensualService){}
 

@@ -26,10 +26,15 @@ export class CategoriaMensualService {
    * @param year - Año seleccionado
    */
 
-  getResumenMensual(sucursal: number, year: number): Observable<any> {
+  getResumenMensual(year: number, sucursal?: number): Observable<any> {
     let params = new HttpParams()
-      .set('sucursal', sucursal.toString())
-      .set('year', year.toString());
+      .set('year', year.toString());     
+    // Agregar sucursal como string vacío si no se proporciona
+    if (sucursal) {
+      params = params.set('sucursal', sucursal.toString());
+    } else {
+      params = params.set('sucursal', '');
+    }
   
     return this.http.get(`${this.apiUrl}/resumen-categorias-mensual`, { params });
   }

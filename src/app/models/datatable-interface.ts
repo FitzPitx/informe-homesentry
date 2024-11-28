@@ -1,14 +1,20 @@
-export interface dataTableResponse {
-  codigoCategoria: number;
-  nombreCategoria: string;
-  mes: string;
-  ventaActual: number;
-  utilidadActual: number;
-  margenActual: number;
-  ventaAnterior: number;
-  utilidadAnterior: number;
-  margenAnterior: number;
-  diferenciaVentas: number;
-  diferenciaUtilidad: number;
-  variacionVentas: number;
+export interface MonthData {
+  [key: string]: number;
+}
+
+export interface CategoryData {
+  codigo_categoria: number;
+  nombre_categoria: string;
+  enero: MonthData;
+  febrero: MonthData;
+  marzo: MonthData;
+  abril: MonthData;
+  mayo: MonthData;
+  junio: MonthData;
+  julio: MonthData;
+  agosto: MonthData;
+  septiembre: MonthData;
+  octubre: MonthData;
+  noviembre: MonthData;
+  diciembre: MonthData;
 }

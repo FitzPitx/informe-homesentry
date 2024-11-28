@@ -49,7 +49,7 @@
     </form>
 </div>
 
-<div class="container d-flex ">
+<!-- <div class="container d-flex ">
     <div class="modern-input">
         <mat-form-field appearance="outline">
           <mat-label>Búsqueda</mat-label>
@@ -60,135 +60,74 @@
                  <mat-icon matPrefix><i class="bi bi-search ms-1"></i></mat-icon> 
         </mat-form-field>
       </div>
-</div>
+</div> -->
 
 
 <div class="table-responsive">
-    <table matSort (matSortChange)="sortData($event)" mat-table [dataSource]="listaVentasDataSource"
-        class="mat-elevation-z8 table  table-hover table-sm">
+    <!-- Template -->
+    <table mat-table [dataSource]="listaVentasDataSource" class="mat-elevation-z8">
 
-        <ng-container matColumnDef="codigoCategoria">
-            <th mat-header-cell *matHeaderCellDef class="pt-1">
-                Código 
-                <div class="header-select">
-                  <mat-form-field appearance="outline" class="m-1">
-                    <mat-select [(ngModel)]="selectedCategory" 
-                                (selectionChange)="filterByCategory($event.value)"
-                                panelClass="small-select-panel">
-                      <mat-option value="">Todos</mat-option>
-                      <mat-option *ngFor="let category of uniqueCategories" [value]="category">
-                        {{category}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </th>
-            <td mat-cell *matCellDef="let element"> {{element.codigoCategoria}} </td>
+        <!-- Base columns -->
+        <ng-container matColumnDef="codigoCategoria" sticky>
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="border-end border-bottom text-center">Código</th>
+            <td class="border-0 border-end" mat-cell *matCellDef="let element">{{element.codigoCategoria}}</td>
+            <td class="fw-bold" mat-footer-cell *matFooterCellDef>Totales</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreCategoria" sticky>
+            <th class="border-bottom text-center" mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Nombre</th>
+            <td class="border-0 border-bottom"mat-cell *matCellDef="let element">{{element.nombreCategoria}}</td>
+            <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+
+        <ng-container *ngFor="let month of months">
+            <ng-container *ngFor="let metric of metricsColumns" [matColumnDef]="month + '-' + metric">
+              <th mat-header-cell *matHeaderCellDef>{{formatMetricName(metric)}}</th>
+              <td mat-cell *matCellDef="let element" class="text-end" [ngClass]="{
+                'cell-positive': element[month + '-' + metric] > 0,
+                'cell-negative': element[month + '-' + metric] < 0
+              }">
+                <ng-container [ngSwitch]="metric">
+                  <ng-container *ngSwitchCase="'margenActual'">
+                    {{element[month + '-' + metric] | number:'1.0-0'}}%
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'margenAnterior'">
+                    {{element[month + '-' + metric] | number:'1.0-0'}}%
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{element[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td mat-footer-cell *matFooterCellDef class="text-end">
+                <ng-container *ngIf="!metricsToExcludeFromTotals.includes(metric)">
+                  {{getTotalsByColumn()[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
+                </ng-container>
+              </td>
+            </ng-container>
           </ng-container>
 
-        <ng-container matColumnDef="nombreCategoria">
-            <th mat-sort-header="nombreCategoria" mat-header-cell *matHeaderCellDef> Nombre </th>
-            <td mat-cell *matCellDef="let element"> {{element.nombreCategoria}} </td>
+        <!-- Header columns with spaces-->
+        <ng-container matColumnDef="first-group-spaces">
+            <th mat-header-cell *matHeaderCellDef class="border border-0">&nbsp;</th>
         </ng-container>
 
-        <ng-container matColumnDef="mes">
-            <th mat-sort-header="mes" mat-header-cell *matHeaderCellDef> Mes </th>
-            <td mat-cell *matCellDef="let element"> {{element.mes}} </td>
+        <ng-container matColumnDef="second-group-spaces" >
+            <th mat-header-cell *matHeaderCellDef class="border border-0">&nbsp;</th>
         </ng-container>
 
-        <ng-container matColumnDef="ventaActual">
-            <th mat-header-cell *matHeaderCellDef> Venta Actual </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.ventaActual > 0,
-                    'cell-negative': element.ventaActual < 0
-                }"
-            > {{element.ventaActual | currency:'USD':'symbol':'1.0-0'}} </td>
+        <!-- Month header columns -->
+        <ng-container *ngFor="let month of months" [matColumnDef]="'header_' + month">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="9" class="border border-0 border-start border-bottom">
+                {{month}}
+            </th>
         </ng-container>
 
-        <ng-container matColumnDef="utilidadActual">
-            <th mat-header-cell *matHeaderCellDef> Utilidad Actual </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.utilidadActual > 0,
-                    'cell-negative': element.utilidadActual < 0
-                }"
-            > {{element.utilidadActual | currency:'USD':'symbol':'1.0-0'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="margenActual">
-            <th mat-header-cell *matHeaderCellDef> Margen Actual </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.margenActual > 0,
-                    'cell-negative': element.margenActual < 0
-                }"
-            > {{element.margenActual | number:'1.0-0'}}% </td>
-        </ng-container>
-
-        <ng-container matColumnDef="ventaAnterior">
-            <th mat-header-cell *matHeaderCellDef> Venta Anterior </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.ventaAnterior > 0,
-                    'cell-negative': element.ventaAnterior < 0
-                }"
-            > {{element.ventaAnterior | currency:'USD':'symbol':'1.0-0'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="utilidadAnterior">
-            <th mat-header-cell *matHeaderCellDef> Utilidad Anterior </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.utilidadAnterior > 0,
-                    'cell-negative': element.utilidadAnterior < 0
-                }"
-            > {{element.utilidadAnterior | currency:'USD':'symbol':'1.0-0'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="margenAnterior">
-            <th mat-header-cell *matHeaderCellDef> Margen Anterior </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.margenAnterior > 0,
-                    'cell-negative': element.margenAnterior < 0
-                }"
-            > {{element.margenAnterior | number:'1.0-0'}}% </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diferenciaVentas">
-            <th mat-header-cell *matHeaderCellDef> Diferencia Ventas </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.diferenciaVentas > 0,
-                    'cell-negative': element.diferenciaVentas < 0
-                }"
-            > {{element.diferenciaVentas | currency:'USD':'symbol':'1.0-0'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diferenciaUtilidad">
-            <th mat-header-cell *matHeaderCellDef> Diferencia Utilidad </th>
-            <td mat-cell *matCellDef="let element" class="text-end"
-                [ngClass]="{
-                    'cell-positive': element.diferenciaUtilidad > 0,
-                    'cell-negative': element.diferenciaUtilidad < 0
-                }"
-            > {{element.diferenciaUtilidad | currency:'USD':'symbol':'1.0-0'}} </td>
-        </ng-container>
-
-
-        <ng-container matColumnDef="variacionVentas">
-            <th mat-header-cell *matHeaderCellDef> Variación Ventas </th>
-            <td mat-cell *matCellDef="let element" class="text-info"
-                [ngClass]="{
-                    'cell-positive': element.variacionVentas > 0,
-                    'cell-negative': element.variacionVentas < 0
-                }"
-            > {{element.variacionVentas | number:'1.0-0'}} </td>
-        </ng-container>
-
+        <!-- Header rows -->
+        <tr mat-header-row *matHeaderRowDef="getAllHeaderColumns()"></tr>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Selecciona una página">
     </mat-paginator>

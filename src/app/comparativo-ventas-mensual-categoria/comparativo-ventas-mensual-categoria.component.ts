@@ -4,13 +4,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriaMensualService } from '../services/categoria-mensual/categoria-mensual.service';
 import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
-import { dataTableResponse } from '../models/datatable-interface';
+import { CategoryData, MonthData } from '../models/datatable-interface';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Sort, MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+
+// Create interface for transformed data
+interface TransformedData {
+  codigoCategoria: number;
+  nombreCategoria: string;
+  [key: string]: string | number; // For dynamic month-metric combinations
+}
 
 @Component({
   selector: 'app-comparativo-ventas-mensual-categoria',
@@ -31,7 +38,7 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss'],
 })
 export class ComparativoVentasMensualCategoriaComponent implements OnInit {
-  listaVentas: dataTableResponse[] = [];
+  listaVentas: CategoryData[] = [];
   filterForm: FormGroup;
 
   searchText : string = "";
@@ -40,23 +47,9 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   uniqueCategories: number[] = [];
   selectedCategory: string = '';
 
-  listaVentasDataSource = new MatTableDataSource<dataTableResponse>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  listaVentasDataSource = new MatTableDataSource<TransformedData>();
 
-  displayedColumns: string[] = [
-    'codigoCategoria',
-    'nombreCategoria',
-    'mes',
-    'ventaActual',
-    'utilidadActual',
-    'margenActual',
-    'ventaAnterior',
-    'utilidadAnterior',
-    'margenAnterior',
-    'diferenciaVentas',
-    'diferenciaUtilidad',
-    'variacionVentas',
-  ];
 
   constructor(
     private fb: FormBuilder,
@@ -69,32 +62,87 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     });
   }
 
+
+  months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  headerRows = ['header_Enero', 'header_Febrero', 'header_Marzo', 'header_Abril', 'header_Mayo', 'header_Junio', 'header_Julio', 'header_Agosto', 'header_Septiembre', 'header_Octubre', 'header_Noviembre', 'header_Diciembre'];
+
+
+  metricsColumns = [
+    'ventaActual', 'utilidadActual', 'margenActual', 'ventaAnterior', 'utilidadAnterior', 'margenAnterior', 'diferenciaVentas', 'diferenciaUtilidad', 'variacionVentas'
+  ]
+
+  displayedColumns: string[] = [
+    'codigoCategoria',
+    'nombreCategoria',
+    ...this.months.flatMap((month) => 
+      this.metricsColumns.map((metric) => `${month}-${metric}`))
+  ];
+
   ngOnInit(): void {
-    // Obtener la lista de ventas año actual
+     
     const year = new Date().getFullYear();
+    
+    // Get initial data
     this._categoriaService.getResumenMensual(year).subscribe({
-      next: (resp) => {
-        console.log(resp);
+      next: (resp: CategoryData[]) => {
         this.listaVentas = resp;
         this.feedDataSource(resp);
-        // Extraemos las categorías únicas
-        this.uniqueCategories = Array.from(
-          new Set(this.listaVentas.map((item) => item.codigoCategoria))
-        );
       },
-      error: (err) => {
-        console.log(err);
-      },
+      error: (err) => console.error('Error loading data:', err)
+    });
+
+  }
+
+  getAllHeaderColumns(): string[] {
+    return ['first-group-spaces', 'second-group-spaces'].concat(this.headerRows);
+  }
+
+  formatMetricName(metric: string): string {
+    const metricMap: { [key: string]: string } = {
+      'ventaActual': 'Venta Actual',
+      'utilidadActual': 'Utilidad Actual',
+      'margenActual': 'Margen Actual',
+      'ventaAnterior': 'Venta Anterior',
+      'utilidadAnterior': 'Utilidad Anterior',
+      'margenAnterior': 'Margen Anterior',
+      'diferenciaVentas': 'Diferencia Ventas',
+      'diferenciaUtilidad': 'Diferencia Utilidad',
+      'variacionVentas': 'Variación Ventas'
+    };
+    return metricMap[metric] || metric;
+  }
+
+
+  transformData(data: CategoryData[]): TransformedData[] {
+    return data.map(category => {
+      const transformedRow: TransformedData = {
+        codigoCategoria: category.codigo_categoria,
+        nombreCategoria: category.nombre_categoria
+      };
+
+      this.months.forEach(month => {
+        const monthKey = month.toLowerCase();
+        const monthData = category[monthKey as keyof CategoryData] as MonthData;
+        
+        if (monthData) {
+          Object.entries(monthData).forEach(([key, value]) => {
+            transformedRow[key] = value;
+          });
+        }
+      });
+
+      return transformedRow;
     });
   }
 
-  filterByCategory(category: number) {
-    this.selectedCategory = category.toString();
-    const filteredData = category
-    ? this.listaVentas.filter((item) => item.codigoCategoria === category)
-    : this.listaVentas;
-    this.feedDataSource(filteredData);
-  }
+  // filterByCategory(category: number) {
+  //   this.selectedCategory = category.toString();
+  //   const filteredData = category
+  //   ? this.listaVentas.filter((item) => item.codigoCategoria === category)
+  //   : this.listaVentas;
+  //   this.feedDataSource(filteredData);
+  // }
 
   // Método que se ejecuta al enviar el formulario
   onSubmit() {
@@ -115,62 +163,87 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     }
   }
 
-  feedDataSource(data: dataTableResponse[]) {
-    this.listaVentasDataSource = new MatTableDataSource<dataTableResponse>(
-      data
-    );
-    this.listaVentasDataSource.paginator = this.paginator;
-  }
-
-  sortData(sort: Sort) {
-    const data = this.listaVentas.slice();
-    if (!sort.active || sort.direction === '') {
-      this.feedDataSource(data);
-      return;
+  feedDataSource(data: CategoryData[]) {
+    const transformedData = this.transformData(data);
+    this.listaVentasDataSource = new MatTableDataSource<TransformedData>(transformedData);
+    if (this.paginator) {
+      this.listaVentasDataSource.paginator = this.paginator;
     }
-
-    const sortedData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'codigoCategoria':
-          return compare(a.codigoCategoria, b.codigoCategoria, isAsc);
-        case 'nombreCategoria':
-          return compare(a.nombreCategoria, b.nombreCategoria, isAsc);
-        case 'mes':
-          return compare(a.mes, b.mes, isAsc);
-        default:
-          return 0;
-      }
-    });
-
-    this.feedDataSource(sortedData);
   }
+
+  // sortData(sort: Sort) {
+  //   const data = this.listaVentas.slice();
+  //   if (!sort.active || sort.direction === '') {
+  //     this.feedDataSource(data);
+  //     return;
+  //   }
+
+  //   const sortedData = data.sort((a, b) => {
+  //     const isAsc = sort.direction === 'asc';
+  //     switch (sort.active) {
+  //       case 'codigoCategoria':
+  //         return compare(a.codigoCategoria, b.codigoCategoria, isAsc);
+  //       case 'nombreCategoria':
+  //         return compare(a.nombreCategoria, b.nombreCategoria, isAsc);
+  //       default:
+  //         return 0;
+  //     }
+  //   });
+
+  //   this.feedDataSource(sortedData);
+  // }
 
   // Filtrado por las 3 primeras columnas
-  private searchableColumns = ['codigoCategoria', 'nombreCategoria', 'mes'];
+  // private searchableColumns = ['codigoCategoria', 'nombreCategoria'];
 
 
-  onInputChange() {
-    this.listaVentasDataSource.filterPredicate = (data: any, filter: string) => {
-      const searchStr = filter.toLowerCase();
+  // onInputChange() {
+  //   this.listaVentasDataSource.filterPredicate = (data: any, filter: string) => {
+  //     const searchStr = filter.toLowerCase();
       
-      return this.searchableColumns.some(column => {
-        const value = data[column];
+  //     return this.searchableColumns.some(column => {
+  //       const value = data[column];
         
-        // Convertir el valor a string y manejar casos especiales
-        if (value === null || value === undefined) return false;
+  //       // Convertir el valor a string y manejar casos especiales
+  //       if (value === null || value === undefined) return false;
         
-        // Manejar números y currency
-        if (typeof value === 'number') {
-          return value.toString().includes(searchStr);
-        }
-        // Para strings normales
-        return value.toString().toLowerCase().includes(searchStr);
-      });
-    };
+  //       // Manejar números y currency
+  //       if (typeof value === 'number') {
+  //         return value.toString().includes(searchStr);
+  //       }
+  //       // Para strings normales
+  //       return value.toString().toLowerCase().includes(searchStr);
+  //     });
+  //   };
 
-    this.listaVentasDataSource.filter = this.searchText.trim().toLowerCase();
+  //   this.listaVentasDataSource.filter = this.searchText.trim().toLowerCase();
+  // }
+
+
+  metricsToExcludeFromTotals = ['margenActual', 'margenAnterior', 'variacionVentas'];
+
+getTotalsByColumn(): any {
+  if (!this.listaVentasDataSource.data || this.listaVentasDataSource.data.length === 0) {
+    return {};
   }
+
+  const totals: any = {
+    codigoCategoria: 'Totales',
+    nombreCategoria: ''
+  };
+
+  this.months.forEach(month => {
+    this.metricsColumns
+      .filter(metric => !this.metricsToExcludeFromTotals.includes(metric))
+      .forEach(metric => {
+        const key = `${month}-${metric}`;
+        totals[key] = this.listaVentasDataSource.data
+          .reduce((sum: number, row: any) => sum + (row[key] || 0), 0);
+    });
+  });
+
+  return totals;
+}
   
 }
 

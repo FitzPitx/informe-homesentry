@@ -9,7 +9,7 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Sort, MatSortModule } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 
 // Create interface for transformed data
@@ -27,7 +27,6 @@ interface TransformedData {
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatPaginator,
     CategoriaVentasComponent,
     MatSortModule,
     MatFormFieldModule,
@@ -41,11 +40,14 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   listaVentas: CategoryData[] = [];
   filterForm: FormGroup;
 
-  searchText : string = "";
-  timeOut: any;
+  uniqueCodigos: string[] = [];
+  uniqueNombres: string[] = [];
+  filterValues = {
+    codigoCategoria: '',
+    nombreCategoria: ''
+  };
 
-  uniqueCategories: number[] = [];
-  selectedCategory: string = '';
+  searchText : string = "";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   listaVentasDataSource = new MatTableDataSource<TransformedData>();
@@ -80,7 +82,6 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-     
     const year = new Date().getFullYear();
     
     // Get initial data
@@ -88,9 +89,32 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
       next: (resp: CategoryData[]) => {
         this.listaVentas = resp;
         this.feedDataSource(resp);
+        this.updateFilterLists();
       },
       error: (err) => console.error('Error loading data:', err)
     });
+  }
+
+  updateFilterLists() {
+    this.uniqueCodigos = [...new Set(this.listaVentasDataSource.data.map(item => item.codigoCategoria.toString()))];
+    this.uniqueNombres = [...new Set(this.listaVentasDataSource.data.map(item => item.nombreCategoria))];
+  }
+
+  applyFilter(columnName: string, filterValue: string){
+    this.filterValues[columnName as keyof typeof this.filterValues] = filterValue;
+    
+    this.listaVentasDataSource.filterPredicate = (data: any, filter: string) => {
+      const matchFilter = [];
+      for (const key in this.filterValues) {
+        const val = this.filterValues[key as keyof typeof this.filterValues];
+        if (val) {
+          matchFilter.push(data[key].toString().toLowerCase() === val.toLowerCase());
+        }
+      }
+      return matchFilter.every(Boolean);
+    };
+    
+    this.listaVentasDataSource.filter = JSON.stringify(this.filterValues);
 
   }
 
@@ -136,13 +160,6 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     });
   }
 
-  // filterByCategory(category: number) {
-  //   this.selectedCategory = category.toString();
-  //   const filteredData = category
-  //   ? this.listaVentas.filter((item) => item.codigoCategoria === category)
-  //   : this.listaVentas;
-  //   this.feedDataSource(filteredData);
-  // }
 
   // Método que se ejecuta al enviar el formulario
   onSubmit() {
@@ -171,53 +188,32 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
     }
   }
 
-  // sortData(sort: Sort) {
-  //   const data = this.listaVentas.slice();
-  //   if (!sort.active || sort.direction === '') {
-  //     this.feedDataSource(data);
-  //     return;
-  //   }
 
-  //   const sortedData = data.sort((a, b) => {
-  //     const isAsc = sort.direction === 'asc';
-  //     switch (sort.active) {
-  //       case 'codigoCategoria':
-  //         return compare(a.codigoCategoria, b.codigoCategoria, isAsc);
-  //       case 'nombreCategoria':
-  //         return compare(a.nombreCategoria, b.nombreCategoria, isAsc);
-  //       default:
-  //         return 0;
-  //     }
-  //   });
-
-  //   this.feedDataSource(sortedData);
-  // }
-
-  // Filtrado por las 3 primeras columnas
-  // private searchableColumns = ['codigoCategoria', 'nombreCategoria'];
+  // Filtrado por las 2 primeras columnas
+  private searchableColumns = ['codigoCategoria', 'nombreCategoria'];
 
 
-  // onInputChange() {
-  //   this.listaVentasDataSource.filterPredicate = (data: any, filter: string) => {
-  //     const searchStr = filter.toLowerCase();
+  onInputChange() {
+    this.listaVentasDataSource.filterPredicate = (data: any, filter: string) => {
+      const searchStr = filter.toLowerCase();
       
-  //     return this.searchableColumns.some(column => {
-  //       const value = data[column];
+      return this.searchableColumns.some(column => {
+        const value = data[column];
         
-  //       // Convertir el valor a string y manejar casos especiales
-  //       if (value === null || value === undefined) return false;
+        // Convertir el valor a string y manejar casos especiales
+        if (value === null || value === undefined) return false;
         
-  //       // Manejar números y currency
-  //       if (typeof value === 'number') {
-  //         return value.toString().includes(searchStr);
-  //       }
-  //       // Para strings normales
-  //       return value.toString().toLowerCase().includes(searchStr);
-  //     });
-  //   };
+        // Manejar números y currency
+        if (typeof value === 'number') {
+          return value.toString().includes(searchStr);
+        }
+        // Para strings normales
+        return value.toString().toLowerCase().includes(searchStr);
+      });
+    };
 
-  //   this.listaVentasDataSource.filter = this.searchText.trim().toLowerCase();
-  // }
+    this.listaVentasDataSource.filter = this.searchText.trim().toLowerCase();
+  }
 
 
   metricsToExcludeFromTotals = ['margenActual', 'margenAnterior', 'variacionVentas'];
@@ -244,8 +240,40 @@ getTotalsByColumn(): any {
 
   return totals;
 }
-  
+
+  pageSize = 5;
+  currentPage = 0;
+
+  getCurrentPageStart(): number {
+    return this.currentPage * this.pageSize;
+  }
+
+  getCurrentPageEnd(): number {
+    return Math.min((this.currentPage + 1) * this.pageSize, this.listaVentasDataSource.filteredData.length);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.listaVentasDataSource.filteredData.length / this.pageSize);
+  }
+
+  getPages(): number[] {
+    const pageCount = this.getTotalPages();
+    return Array(pageCount).fill(0).map((_, i) => i);
+  }
+
+  setPage(page: number): void {
+    if (page >= 0 && page < this.getTotalPages()) {
+      this.currentPage = page;
+    }
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 0; // Reset to first page when changing page size
+  }
+
 }
+
+
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

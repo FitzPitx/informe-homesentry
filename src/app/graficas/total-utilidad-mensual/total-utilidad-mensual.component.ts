@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CategoriaMensualService } from '../../services/categoria-mensual/categoria-mensual.service';
 import {
   ApexAxisChartSeries,
@@ -29,14 +29,14 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-total-mensual-categoria',
+  selector: 'app-total-utilidad-mensual',
   imports: [
     NgApexchartsModule
   ],
-  templateUrl: './total-mensual-categoria.component.html',
-  styleUrl: './total-mensual-categoria.component.scss'
+  templateUrl: './total-utilidad-mensual.component.html',
+  styleUrl: './total-utilidad-mensual.component.scss'
 })
-export class TotalMensualCategoriaComponent implements OnInit {
+export class TotalUtilidadMensualComponent implements OnInit {
 
   @Input() searchYearChild: number = 0;
   @Input() searchSucursalChild: number = 0;
@@ -61,21 +61,20 @@ export class TotalMensualCategoriaComponent implements OnInit {
   constructor(private categoriaService: CategoriaMensualService){}
 
   ngOnInit(): void {
-      this.categoriaService.getTotalSummaryGraphByCategory(this.searchYearChild, this.searchSucursalChild).subscribe((data) => {
-        const codigoCategoria = data.map((item: any) => item.codigoCategoria);
-        const nombreCategoria = data.map((item: any) => item.nombreCategoria);
-        const totalVentasActual = data.map((item: any) => item.totalVentasActual);
-        const totalVentasAnterior = data.map((item: any) => item.totalVentasAnterior);
+      this.categoriaService.getTotalProfitComparisonByMonth(this.searchYearChild, this.searchSucursalChild).subscribe((data: any) => {
+        const month = data.map((item: any) => item.month);
+        const totalProfitCurrentYear = data.map((item: any) => item.totalProfitCurrentYear);
+        const totalProfitLastYear = data.map((item: any) => item.totalProfitLastYear);
 
         this.chartOptions = {
           series: [
             {
               name: 'Año Actual',
-              data: totalVentasActual
+              data: totalProfitCurrentYear
             },
             {
               name: 'Año Anterior',
-              data: totalVentasAnterior
+              data: totalProfitLastYear
             }
           ],
           chart: {
@@ -100,7 +99,7 @@ export class TotalMensualCategoriaComponent implements OnInit {
             colors: ['transparent']
           },
           xaxis: {
-            categories: nombreCategoria
+            categories: month
           },
           yaxis: {
             title: {
@@ -123,11 +122,11 @@ export class TotalMensualCategoriaComponent implements OnInit {
           position: 'top',
         },
         title: {
-          text: 'Comparativo de Ventas por Categoría',
+          text: 'Comparativo de Utilidad por Mes',
           align: 'center',
         },
       }
-    });
+      });
   }
 
 }

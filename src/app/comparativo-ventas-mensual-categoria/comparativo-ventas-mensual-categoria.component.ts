@@ -3,7 +3,9 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriaMensualService } from '../services/categoria-mensual/categoria-mensual.service';
-import { CategoriaVentasComponent } from '../graficas/categoria-ventas/categoria-ventas.component';
+import { TotalMensualCategoriaComponent } from '../graficas/total-mensual-categoria/total-mensual-categoria.component';
+import { TotalMensualComponent } from '../graficas/total-mensual/total-mensual.component';
+import { TotalUtilidadMensualComponent } from '../graficas/total-utilidad-mensual/total-utilidad-mensual.component';
 import { CategoryData, MonthData } from '../models/datatable-interface';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -11,6 +13,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 // Create interface for transformed data
 interface TransformedData {
@@ -27,11 +31,13 @@ interface TransformedData {
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
-    CategoriaVentasComponent,
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    TotalMensualComponent,
+    TotalMensualCategoriaComponent,
+    TotalUtilidadMensualComponent,
   ],
   templateUrl: './comparativo-ventas-mensual-categoria.component.html',
   styleUrls: ['./comparativo-ventas-mensual-categoria.component.scss'],
@@ -48,10 +54,15 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   };
 
   searchText : string = "";
+  searchYear : number = 0;
+  searchSucursal : number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   listaVentasDataSource = new MatTableDataSource<TransformedData>();
 
+  @ViewChild(TotalMensualComponent) totalMensualComponent!: TotalMensualComponent;
+  @ViewChild(TotalMensualCategoriaComponent) totalMensualCategoriaComponent!: TotalMensualCategoriaComponent;
+  @ViewChild(TotalUtilidadMensualComponent) totalUtilidadMensualComponent!: TotalUtilidadMensualComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -83,8 +94,11 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
 
   ngOnInit(): void {
     const year = new Date().getFullYear();
-    
     // Get initial data
+    this.searchYear = year;
+    if (this.searchSucursal == 0){
+      this.searchSucursal = Number(this.searchSucursal.toString() || '');
+    }
     this._categoriaService.getResumenMensual(year).subscribe({
       next: (resp: CategoryData[]) => {
         this.listaVentas = resp;
@@ -164,17 +178,31 @@ export class ComparativoVentasMensualCategoriaComponent implements OnInit {
   // Método que se ejecuta al enviar el formulario
   onSubmit() {
     const { sucursal, year } = this.filterForm.value;
-    if (sucursal && year) {
-      this._categoriaService.getResumenMensual(year, sucursal).subscribe({
+    this.searchYear = year;
+    if (sucursal == 0){
+      this.searchSucursal = Number(this.searchSucursal.toString() || '')
+    } else {
+      this.searchSucursal = sucursal;
+    }
+    console.log(this.searchYear);
+    if (year) {
+      this._categoriaService.getResumenMensual(year, this.searchSucursal).subscribe({
         next: (resp) => {
           console.log(resp);
           this.listaVentas = resp;
           this.feedDataSource(resp);
+
+          //Refresh charts
+          this.totalMensualComponent.ngOnInit();
+          this.totalMensualCategoriaComponent.ngOnInit();
+          this.totalUtilidadMensualComponent.ngOnInit();
         },
         error: (err) => {
           console.log(err);
         },
       });
+
+
     } else {
       alert('Por favor selecciona una sucursal y un año.');
     }
@@ -241,7 +269,55 @@ getTotalsByColumn(): any {
   return totals;
 }
 
-  pageSize = 5;
+// Exportar a Excel
+exportToExcel() {
+  // Create workbook and worksheet
+  const workbook = new ExcelJS.Workbook(); 
+  const worksheet = workbook.addWorksheet('Comparativo de Ventas');
+
+  // Add header row
+  const headers = this.displayedColumns.map(column => this.formatMetricName(column));
+  worksheet.addRow(headers);
+
+  // Add data rows
+  this.listaVentasDataSource.filteredData.forEach(row => {
+    const rowData = [
+      row.codigoCategoria,
+      row.nombreCategoria,
+      ...this.months.flatMap(month =>
+        this.metricsColumns.map(metric => row[`${month}-${metric}`])
+      )
+    ];
+    worksheet.addRow(rowData);
+  });
+
+  const totals = this.getTotalsByColumn();
+  const totalsRow = [
+    'Totales',
+    '',
+    ...this.months.flatMap(month =>
+      this.metricsColumns.map(metric => 
+        this.metricsToExcludeFromTotals.includes(metric) ? '' : totals[`${month}-${metric}`]
+      )
+    )
+  ];
+  worksheet.addRow(totalsRow);
+
+  // Format cells
+  worksheet.columns.forEach(column => {
+    column.width = 15;
+  });
+
+  // Generate and save file
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, `Comparativo_Ventas_${this.searchYear}.xlsx`);
+  });
+}
+
+// Paginacion de la tabla  
+
+  pageSize = 10;
   currentPage = 0;
 
   getCurrentPageStart(): number {

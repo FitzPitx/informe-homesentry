@@ -1,52 +1,52 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <p class="fs-4">Ventas Comparativo Año Anterior</p>
-    <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="btn-toolbar mb-2 mb-md-0">
+  <p class="fs-4">Ventas Comparativo Año Anterior</p>
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="btn-toolbar mb-2 mb-md-0">
 
-        <!-- Selector de Sucursal -->
-        <div class="input-group me-2">
-            <span class="input-group-text">
-                <i class="bi bi-building"></i>
-            </span>
-            <select class="form-select form-select-sm" formControlName="sucursal">
-                <option value="" disabled>Sucursal</option>
-                <option value="1">001 - Home Sentry Norte</option>
-                <option value="21">021 - Home Sentry Plaza Americas</option>
-                <option value="32">032 - Home Sentry Titan</option>
-                <option value="53">053 - Home Sentry 116</option>
-                <option value="68">068 - Home Sentry Salitre</option>
-                <option value="84">084 - Sentry Cacique</option>
-                <option value="100">100 - Home Sentry Villavicencio</option>
-                <option value="140">140 - Sentry Cali 6ta Avenida</option>
-                <option value="160">160 - Sentry Mayorca</option>
-                <option value="180">180 - Sentry Fontanar Chia</option>
-                <option value="200">200 - Sentry Viva Barranquilla</option>
-                <option value="220">220 - Sentry Online</option>
-                <option value="240">240 - Sentry Mercado Libre</option>
-                <option value="280">280 - Hs Cartagena Bocagrande Plaza</option>
-                <option value="300">300 - Sentry Medellin Santafe</option>
-                <option value="320">320 - Sentry Plaza Central Bogota</option>
-            </select>
-        </div>
+    <!-- Selector de Sucursal -->
+    <div class="input-group me-2">
+      <span class="input-group-text">
+        <i class="bi bi-building"></i>
+      </span>
+      <select class="form-select form-select-sm" formControlName="sucursal">
+        <option value="" disabled>Sucursal</option>
+        <option value="1">001 - Home Sentry Norte</option>
+        <option value="21">021 - Home Sentry Plaza Americas</option>
+        <option value="32">032 - Home Sentry Titan</option>
+        <option value="53">053 - Home Sentry 116</option>
+        <option value="68">068 - Home Sentry Salitre</option>
+        <option value="84">084 - Sentry Cacique</option>
+        <option value="100">100 - Home Sentry Villavicencio</option>
+        <option value="140">140 - Sentry Cali 6ta Avenida</option>
+        <option value="160">160 - Sentry Mayorca</option>
+        <option value="180">180 - Sentry Fontanar Chia</option>
+        <option value="200">200 - Sentry Viva Barranquilla</option>
+        <option value="220">220 - Sentry Online</option>
+        <option value="240">240 - Sentry Mercado Libre</option>
+        <option value="280">280 - Hs Cartagena Bocagrande Plaza</option>
+        <option value="300">300 - Sentry Medellin Santafe</option>
+        <option value="320">320 - Sentry Plaza Central Bogota</option>
+      </select>
+    </div>
 
-        <!-- Selector de Año -->
-        <div class="input-group me-2">
-            <span class="input-group-text">
-                <i class="bi bi-calendar3"></i>
-            </span>
-            <select class="form-select form-select-sm" formControlName="year">
-                <option value="" disabled selected>Año</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="2022">2022</option>
-            </select>
-        </div>
+    <!-- Selector de Año -->
+    <div class="input-group me-2">
+      <span class="input-group-text">
+        <i class="bi bi-calendar3"></i>
+      </span>
+      <select class="form-select form-select-sm" formControlName="year">
+        <option value="" disabled selected>Año</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <!-- <option value="2022">2022</option> -->
+      </select>
+    </div>
 
-        <!-- Botón de Aplicar Filtros -->
-        <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
-            <i class="bi bi-funnel"></i>
-            Aplicar Filtros
-        </button>
-    </form>
+    <!-- Botón de Aplicar Filtros -->
+    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+      <i class="bi bi-funnel"></i>
+      Aplicar Filtros
+    </button>
+  </form>
 </div>
 
 <!-- <div class="container d-flex ">
@@ -63,114 +63,122 @@
 </div> -->
 
 <!-- comparativo-ventas-mensual-categoria.component.html -->
-<div class="container-fluid">
+<div class="container-fluid mb-3 ">
   <!-- Filters -->
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchText" (input)="onInputChange()">
+  <div class="row align-items-center">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Buscar..." [(ngModel)]="searchText"
+        (input)="onInputChange()">
+    </div>
+    <div class="col-auto ms-auto">
+      <button class="btn btn-success btn-sm mb-1" (click)="exportToExcel()">
+        <i class="bi bi-file-earmark-bar-graph-fill me-1"></i>Exportar a Excel
+      </button>
     </div>
   </div>
+</div>
 
-  <!-- Table -->
-  <div class="table-responsive">
-    <table class="table table-striped table-bordered table-hover">
-      <!-- Month Headers -->
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Categoría</th>
-          <ng-container *ngFor="let month of months">
-            <th [attr.colspan]="9" class="text-center border-start">{{month}}</th>
+
+<!-- Table -->
+<div class="table-responsive">
+  <table class="table table-bordered table-hover">
+    <!-- Month Headers -->
+    <thead>
+      <tr>
+        <th class="sticky-col first-col">Código</th>
+        <th class="sticky-col second-col">Categoría</th>
+        <ng-container *ngFor="let month of months">
+          <th [attr.colspan]="9" class="text-center border-start">{{month}}</th>
+        </ng-container>
+      </tr>
+
+      <!-- Column Headers with Filters -->
+      <tr>
+        <!-- Código Filter -->
+        <th class="sticky-col first-col">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+              Filtrar
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="applyFilter('codigoCategoria', '')">Todos</a></li>
+              <li *ngFor="let codigo of uniqueCodigos">
+                <a class="dropdown-item" (click)="applyFilter('codigoCategoria', codigo)">{{codigo}}</a>
+              </li>
+            </ul>
+          </div>
+        </th>
+
+        <!-- Categoría Filter -->
+        <th class="sticky-col second-col">
+          <div class="dropdown">
+            <button class="btn btn-sm btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+              Filtrar
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="applyFilter('nombreCategoria', '')">Todos</a></li>
+              <li *ngFor="let nombre of uniqueNombres">
+                <a class="dropdown-item" (click)="applyFilter('nombreCategoria', nombre)">{{nombre}}</a>
+              </li>
+            </ul>
+          </div>
+        </th>
+
+        <!-- Metric Headers -->
+        <ng-container *ngFor="let month of months">
+          <ng-container *ngFor="let metric of metricsColumns">
+            <th class="text-center">{{formatMetricName(metric)}}</th>
           </ng-container>
-        </tr>
-        
-        <!-- Column Headers with Filters -->
-        <tr>
-          <!-- Código Filter -->
-          <th class="sticky-col first-col">
-            <div class="dropdown">
-              <button class="btn btn-sm btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                Filtrar
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" (click)="applyFilter('codigoCategoria', '')">Todos</a></li>
-                <li *ngFor="let codigo of uniqueCodigos">
-                  <a class="dropdown-item" (click)="applyFilter('codigoCategoria', codigo)">{{codigo}}</a>
-                </li>
-              </ul>
-            </div>
-          </th>
+        </ng-container>
+      </tr>
+    </thead>
 
-          <!-- Categoría Filter -->
-          <th class="sticky-col second-col">
-            <div class="dropdown">
-              <button class="btn btn-sm btn-light dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                Filtrar
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" (click)="applyFilter('nombreCategoria', '')">Todos</a></li>
-                <li *ngFor="let nombre of uniqueNombres">
-                  <a class="dropdown-item" (click)="applyFilter('nombreCategoria', nombre)">{{nombre}}</a>
-                </li>
-              </ul>
-            </div>
-          </th>
-
-          <!-- Metric Headers -->
-          <ng-container *ngFor="let month of months">
-            <ng-container *ngFor="let metric of metricsColumns">
-              <th class="text-center">{{formatMetricName(metric)}}</th>
-            </ng-container>
-          </ng-container>
-        </tr>
-      </thead>
-
-      <!-- Table Body -->
-      <tbody>
-        <tr *ngFor="let element of listaVentasDataSource.filteredData | slice:getCurrentPageStart():getCurrentPageEnd()">
-          <td class="sticky-col first-col">{{element.codigoCategoria}}</td>
-          <td class="sticky-col second-col">{{element.nombreCategoria}}</td>
-          <ng-container *ngFor="let month of months">
-            <ng-container *ngFor="let metric of metricsColumns">
-              <td class="text-end" [ngClass]="{
+    <!-- Table Body -->
+    <tbody>
+      <tr *ngFor="let element of listaVentasDataSource.filteredData | slice:getCurrentPageStart():getCurrentPageEnd()">
+        <td class="sticky-col first-col">{{element.codigoCategoria}}</td>
+        <td class="sticky-col second-col">{{element.nombreCategoria}}</td>
+        <ng-container *ngFor="let month of months">
+          <ng-container *ngFor="let metric of metricsColumns">
+            <td class="text-end" [ngClass]="{
                 'text-success': +element[month + '-' + metric] > 0,
                 'text-danger': +element[month + '-' + metric] < 0
               }">
-                <ng-container [ngSwitch]="metric">
-                  <ng-container *ngSwitchCase="'margenActual'">
-                    {{element[month + '-' + metric] | number:'1.0-0'}}%
-                  </ng-container>
-                  <ng-container *ngSwitchCase="'margenAnterior'">
-                    {{element[month + '-' + metric] | number:'1.0-0'}}%
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    {{element[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
-                  </ng-container>
+              <ng-container [ngSwitch]="metric">
+                <ng-container *ngSwitchCase="'margenActual'">
+                  {{element[month + '-' + metric] | number:'1.0-0'}}%
                 </ng-container>
-              </td>
-            </ng-container>
+                <ng-container *ngSwitchCase="'margenAnterior'">
+                  {{element[month + '-' + metric] | number:'1.0-0'}}%
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  {{element[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
+                </ng-container>
+              </ng-container>
+            </td>
           </ng-container>
-        </tr>
-      </tbody>
+        </ng-container>
+      </tr>
+    </tbody>
 
-      <!-- Table Footer -->
-      <tfoot>
-        <tr>
-          <td  colspan="2" class="fw-bold sticky-col first-col">Totales</td>
-          <ng-container *ngFor="let month of months">
-            <ng-container *ngFor="let metric of metricsColumns">
-              <td class="text-end" *ngIf="!metricsToExcludeFromTotals.includes(metric)">
-                {{getTotalsByColumn()[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
-              </td>
-              <td *ngIf="metricsToExcludeFromTotals.includes(metric)"></td>
-            </ng-container>
+    <!-- Table Footer -->
+    <tfoot>
+      <tr>
+        <td colspan="2" class="fw-bold sticky-col first-col">Totales</td>
+        <ng-container *ngFor="let month of months">
+          <ng-container *ngFor="let metric of metricsColumns">
+            <td class="text-end" *ngIf="!metricsToExcludeFromTotals.includes(metric)">
+              {{getTotalsByColumn()[month + '-' + metric] | currency:'USD':'symbol':'1.0-0'}}
+            </td>
+            <td *ngIf="metricsToExcludeFromTotals.includes(metric)"></td>
           </ng-container>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+        </ng-container>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 
-  <!-- Add before pagination -->
+<!-- Pagination -->
 <div class="row align-items-center mt-3">
   <div class="col-auto">
     <select class="form-select form-select-sm" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
@@ -181,7 +189,8 @@
   </div>
   <div class="col-auto">
     <span class="text-muted">
-      Mostrando {{getCurrentPageStart() + 1}} - {{getCurrentPageEnd()}} de {{listaVentasDataSource.filteredData.length}} registros
+      Mostrando {{getCurrentPageStart() + 1}} - {{getCurrentPageEnd()}} de {{listaVentasDataSource.filteredData.length}}
+      registros
     </span>
   </div>
   <div class="col">
@@ -201,6 +210,11 @@
   </div>
 </div>
 
-<br>
- 
-<app-categoria-ventas></app-categoria-ventas>
+<br><br>
+<app-total-mensual [searchYearChild]="searchYear" [searchSucursalChild]="searchSucursal"></app-total-mensual>
+<br><br><br>
+<app-total-mensual-categoria [searchYearChild]="searchYear"
+  [searchSucursalChild]="searchSucursal"></app-total-mensual-categoria>
+<br><br><br>
+<app-total-utilidad-mensual [searchYearChild]="searchYear"
+  [searchSucursalChild]="searchSucursal"></app-total-utilidad-mensual>

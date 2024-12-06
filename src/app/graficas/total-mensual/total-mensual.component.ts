@@ -39,6 +39,7 @@ export type ChartOptions = {
 export class TotalMensualComponent implements OnInit {
 
   @Input() searchYearChild: number = 0;
+  @Input() searchSucursalChild: number = 0;
 
   public chartOptions: Partial<ChartOptions> ={
     series: [],
@@ -60,7 +61,7 @@ export class TotalMensualComponent implements OnInit {
   constructor(private categoriaService: CategoriaMensualService){}
 
   ngOnInit(): void {
-      this.categoriaService.getTotalSummayGraph(this.searchYearChild).subscribe((data) => {
+      this.categoriaService.getTotalSummayGraph(this.searchYearChild, this.searchSucursalChild).subscribe((data) => {
         const month = data.map((item: any) => item.month);
         const totalSaleCurrentYear = data.map((item: any) => item.totalSaleCurrentYear);
         const totalSaleLastYear = data.map((item: any) => item.totalSaleLastYear);

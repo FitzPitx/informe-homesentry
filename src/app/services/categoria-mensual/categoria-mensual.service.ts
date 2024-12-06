@@ -10,14 +10,12 @@ export class CategoriaMensualService {
 
   constructor(private http: HttpClient) {}
 
-  getResumenCategoria():
-  Observable<any> {
-    return this.http.get(`${this.apiUrl}/resumen-categorias`)
+  getResumenCategoria(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/resumen-categorias`);
   }
 
-  getResumenCategoriaMes(dataTablesParameters: any):
-  Observable<any> {
-    return this.http.get(`${this.apiUrl}/resumen-categorias-mes`)
+  getResumenCategoriaMes(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/resumen-categorias-mes`);
   }
 
   /**
@@ -37,6 +35,39 @@ export class CategoriaMensualService {
     }
   
     return this.http.get(`${this.apiUrl}/resumen-categorias-mensual`, { params });
+  }
+
+  getTotalSummayGraph(year: number, sucursal?: number): Observable<any>{
+    let params = new HttpParams()
+    .set('year', year.toString());
+    if (sucursal) {
+      params = params.set('sucursal', sucursal.toString());
+    } else {
+      params = params.set('sucursal', '');
+    }
+    return this.http.get(`${this.apiUrl}/resumen-total-mensual-grafica`, { params });
+  }
+
+  getTotalSummaryGraphByCategory(year: number, sucursal?: number): Observable<any>{
+    let params = new HttpParams()
+      .set('year', year.toString());
+      if (sucursal) {
+        params = params.set('sucursal', sucursal.toString());
+      } else {
+        params = params.set('sucursal', '');
+      }
+    return this.http.get(`${this.apiUrl}/resumen-total-mensual-grafica-categoria`, { params });
+  }
+
+  getTotalProfitComparisonByMonth(year: number, sucursal?: number): Observable<any>{
+    let params = new HttpParams()
+    .set('year', year.toString());
+    if (sucursal) {
+      params = params.set('sucursal', sucursal.toString());
+    } else {
+      params = params.set('sucursal', '');
+    }
+    return this.http.get(`${this.apiUrl}/comparacion-utilidad-mensual`, { params });
   }
 
 

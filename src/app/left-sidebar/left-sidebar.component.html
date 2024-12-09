@@ -1,0 +1,29 @@
+<div class="sidenav" [ngClass]="isLefSidebarCollapsed() ? 'sidenav-collapsed' : ''">
+    <div class="logo-container">
+        <button class="logo" (click)="toggleCollapse()">
+            <i class="bi bi-list"></i>
+        </button>
+        @if (!isLefSidebarCollapsed()) {
+            <div class="logo-text">HomeSentry</div>
+        <button class="btn-close" (click)="closeSidenav()">
+            <i class="bi bi-x"></i>
+        </button>
+        } 
+    </div>
+    <div class="sidenav-nav">
+        @for (item of items; track $index) {
+            <li class="sidenav-nav-item">
+                <a class="sidenav-nav-link" 
+                [routerLink]="item.routeLink" 
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                    <i class="sidenav-link-icon" [className]="item.icon"></i>
+                    @if (!isLefSidebarCollapsed()) {
+                        <span class="sidenav-link-text">{{item.label}}</span>
+                    }
+                    
+                </a>
+            </li>  
+        }
+    </div>
+</div>

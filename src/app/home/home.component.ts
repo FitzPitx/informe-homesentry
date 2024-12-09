@@ -1,52 +1,20 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexTitleSubtitle
-} from "ng-apexcharts";
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  title: ApexTitleSubtitle;
-};
-
+import { CommonModule } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 @Component({
     selector: 'app-home',
-    imports: [
-        NgApexchartsModule
-    ],
+    imports: [RouterOutlet, CommonModule],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-
-  @ViewChild("chart") chart!: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
-
-  constructor() {
-    this.chartOptions = {
-      series: [
-        {
-          name: "Ventas Retail",
-          data: [784913, 484168, 748199, 487963, 999159, 784135, 454812, 500000, 1000000]
+    isLeftSidebarCollapsed = input.required<boolean>();
+    screenWidth = input.required<number>();
+    sizeClass = computed(() => {
+        const isLefSidebarCollapsed = this.isLeftSidebarCollapsed();
+        if(isLefSidebarCollapsed) {
+            return '';
         }
-      ],
-      chart: {
-        height: 350,
-        type: "bar"
-      },
-      title: {
-        text: "Total Ventas Anual"
-      },
-      xaxis: {
-        categories: ["Ene", "Feb",  "Mar",  "Abr",  "May",  "Jun",  "Jul",  "Ago", "Sep"]
-      }
-    };
-  }
-
+        return this.screenWidth() > 768 ? 'body-trimmed' : 'body-md-screen';
+    });
 }

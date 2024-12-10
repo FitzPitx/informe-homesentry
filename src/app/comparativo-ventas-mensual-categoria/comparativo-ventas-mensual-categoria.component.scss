@@ -123,5 +123,27 @@ tfoot .sticky-col {
   bottom: 0;
 }
 
+.submit-btn {
+  margin: .5rem;
+}
+
+.select-fixed-width {
+  width: 300px !important; // Adjust pixel value as needed
+}
+
+@media screen and (max-width: 613px) {
+  .sticky-col {
+    position: static !important;
+    left: auto !important;
+    background: inherit;
+    z-index: 1;
+
+    &::after {
+      background: none;
+    }
+  }
+}
+
+
 
 

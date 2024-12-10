@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="container d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <p class="fs-4">Ventas Comparativo Año Anterior</p>
   <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="btn-toolbar mb-2 mb-md-0">
 
@@ -7,7 +7,7 @@
       <span class="input-group-text">
         <i class="bi bi-building"></i>
       </span>
-      <select class="form-select form-select-sm" formControlName="sucursal">
+      <select class="form-select select-fixed-width" formControlName="sucursal">
         <option value="" disabled>Sucursal</option>
         <option value="1">001 - Home Sentry Norte</option>
         <option value="21">021 - Home Sentry Plaza Americas</option>
@@ -42,28 +42,15 @@
     </div>
 
     <!-- Botón de Aplicar Filtros -->
-    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 submit-btn">
       <i class="bi bi-funnel"></i>
       Aplicar Filtros
     </button>
   </form>
 </div>
 
-<!-- <div class="container d-flex ">
-    <div class="modern-input">
-        <mat-form-field appearance="outline">
-          <mat-label>Búsqueda</mat-label>
-          <input matInput 
-                 placeholder="Buscar..." 
-                 [(ngModel)]="searchText" 
-                 (keyup)="onInputChange()">
-                 <mat-icon matPrefix><i class="bi bi-search ms-1"></i></mat-icon> 
-        </mat-form-field>
-      </div>
-</div> -->
-
 <!-- comparativo-ventas-mensual-categoria.component.html -->
-<div class="container-fluid mb-3 ">
+<div class="container mb-3">
   <!-- Filters -->
   <div class="row align-items-center">
     <div class="col">
@@ -210,11 +197,13 @@
   </div>
 </div>
 
-<br><br>
+<div class="container">
+  <hr>
 <app-total-mensual [searchYearChild]="searchYear" [searchSucursalChild]="searchSucursal"></app-total-mensual>
-<br><br><br>
-<app-total-mensual-categoria [searchYearChild]="searchYear"
-  [searchSucursalChild]="searchSucursal"></app-total-mensual-categoria>
-<br><br><br>
-<app-total-utilidad-mensual [searchYearChild]="searchYear"
-  [searchSucursalChild]="searchSucursal"></app-total-utilidad-mensual>
+
+<hr>
+<app-total-mensual-categoria [searchYearChild]="searchYear" [searchSucursalChild]="searchSucursal"></app-total-mensual-categoria>
+
+<hr>
+<app-total-utilidad-mensual [searchYearChild]="searchYear" [searchSucursalChild]="searchSucursal"></app-total-utilidad-mensual>
+</div>

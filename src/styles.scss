@@ -3,24 +3,9 @@
   src: url(app/assets/fonts/Poppins/Poppins-Regular.ttf) format('truetype');
 }
 
-
-.custom-navbar {
-  background-color: #e73113;
-}
-
-.custom-navbar .navbar-text,
-.custom-navbar .navbar-brand,
-.custom-navbar .nav-link {
-  color: #ffffff;
-}
-
-.custom-navbar .nav-link:hover {
-  color: #f8f9fa; /* Color ligeramente más claro al pasar el cursor */
-}
-html, body { height: 100%; }
-body { margin: 0; font-family: "Poppins", sans-serif; }
-
-.small-select-panel.mat-select-panel {
-  min-width: 120px !important;
-  font-size: 12px;
+*{
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }

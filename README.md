@@ -25,18 +25,21 @@ El proyecto **Módulo Reportes Homesentry** es una aplicación web desarrollada 
 
 1.**Clonar el repositorio**:
 
-~~~ git clone [URL_DEL_REPOSITORIO]
+~~~pwsh 
+    git clone [URL_DEL_REPOSITORIO]
     cd informe-homesentry
 ~~~
 
 2.**Instalar dependencias**:
 
-~~~ npm install
+~~~pwsh
+    npm install
 ~~~
 
 3.**Ejecutar la aplicación**:
 
-~~~ ng serve
+~~~pwsh
+    ng serve
 ~~~
 
 La aplicación estará disponible en `http://localhost:4200/`.
@@ -52,7 +55,7 @@ El proyecto está organizado de la siguiente manera:
   * **services/**: Contiene los servicios para consumir APIs.
     * **categoria-mensual.service.ts**: para obtener los datos de ventas por categoría.
   * **models/**: Define las interfaces y modelos de datos utilizados.
-  
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

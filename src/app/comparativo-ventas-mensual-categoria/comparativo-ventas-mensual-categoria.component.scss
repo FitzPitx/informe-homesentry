@@ -4,8 +4,6 @@
   text-align: center;
 }
 
-
-
 /* Estilos para celdas con valores */
 .cell-positive {
   background-color: rgba(var(--bs-success-rgb), 0.05) !important;
@@ -38,11 +36,6 @@
   overflow-y: auto;
   transform: none !important; // Prevent Bootstrap's positioning
   margin-top: 2px !important;
-}
-
-// Ensure dropdown stays above table
-.mat-header-cell {
-  overflow: visible !important; // Override Material default
 }
 
 // Optional: Add shadow for better visibility
